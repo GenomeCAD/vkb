@@ -183,7 +183,7 @@ classDiagram
 ## Subcommand
 ### convert
 
-This command are split in two subcommand, one to load data and another to save data.
+This subcommand load data from a classic bioinformatic file and save information in exploded database.
 
 #### Load
 
@@ -197,13 +197,13 @@ This command are split in two subcommand, one to load data and another to save d
 
 - variant: save loaded information in `Variant`
 - coverage: save loaded information in `Coverage`
-- annotation: save loaded information in `Annotation` user need to indicate which table are targeted
+- annotation: save loaded information in table `Annotation`
 - symptom: save loaded information in `Symptom`
 - genotyping: save loaded information in `Genotyping`
 
 ### exploded2unified
 
-This command take information from exploded database and aggregate it in unified database.
+This subcommand take information from exploded database and aggregate it in unified database.
 
 User should select which table integrate a parameter indicate which column delete.
 Aggregation method are define by subcommand:

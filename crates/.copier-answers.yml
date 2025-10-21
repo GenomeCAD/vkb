@@ -1,0 +1,16 @@
+# Changes here will be overwritten by Copier
+_commit: 1.9.2
+_src_path: gh:natir/copier-rust
+author_email: pierre.marijon@genomecad.fr
+author_name: Pierre Marijon
+bin: true
+copyright_date: '2025'
+copyright_holder: Pierre Marijon
+copyright_holder_email: pierre.marijon@genomecad.fr
+copyright_license: MIT
+forge_namespace: GenomeCAD
+forge_repo_name: vkb
+lib: true
+msrv: '1.75'
+project_description: Variant Knowledge Base
+project_name: vkb
