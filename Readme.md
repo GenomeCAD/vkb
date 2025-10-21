@@ -8,16 +8,25 @@ VKB are split in two base:
 
 ```mermaid
 flowchart LR
-    Exploded[(Exploded)]
-    Unified[(Unified)]
-    gvcf>gvcf]
-    vcf>vcf]
-    tsv>tsv]
-    phenopacket>phenopacket]
-    json>json]
-    vkb_convert([vkb_convert])
-    vkb_exploded2unified([vkb_exploded2unified])
-	web[[web interface]]
+    subgraph not agregate
+        Exploded[(Exploded)]
+        gvcf>gvcf]
+        vcf>vcf]
+        tsv>tsv]
+        phenopacket>phenopacket]
+        json>json]
+        vkb_convert([vkb_convert])
+        vkb_exploded2unified([vkb_exploded2unified])
+    end
+
+    subgraph aggregate
+        Unified[(Unified)]
+    end
+
+    subgraph public
+        BeaconeV2[BeaconeV2]
+        web[[web interface]]
+    end
 
     gvcf -->|any time| vkb_convert
     vcf -->|any time| vkb_convert
