@@ -9,23 +9,24 @@ VKB are split in two base:
 ```mermaid
 flowchart LR
     subgraph not agregate
-        Exploded[(Exploded)]
-        gvcf>gvcf]
-        vcf>vcf]
-        tsv>tsv]
-        phenopacket>phenopacket]
-        json>json]
-        vkb_convert([vkb_convert])
-        vkb_exploded2unified([vkb_exploded2unified])
+        Exploded@{shape: cyl, label: "Exploded"}
+        gvcf@{shape: docs, label: "gvcf"}
+        vcf@{shape: docs, label: "vcf"}
+        tsv@{shape: docs, label: "tsv"}
+        phenopacket@{shape: docs, label: "phenopacket"}
+        json@{shape: docs, label: "json"}
+
+        vkb_convert@{shape: st-rect, label: "convert"}
+        vkb_exploded2unified@{shape: rect, label: "exploded2unified"}
     end
 
     subgraph aggregate
-        Unified[(Unified)]
+        Unified@{shape: cyl, label: "Unified"}
     end
 
     subgraph public
         BeaconeV2[BeaconeV2]
-        web[[web interface]]
+        web@{shape: notch-rect, label: "web interface"}
     end
 
     gvcf -->|any time| vkb_convert
@@ -51,89 +52,101 @@ flowchart LR
 ## Exploded schema
 
 ```mermaid
-erDiagram
-    Variant {
-        string chromosome
-        int start
-        int end
-        string reference
-        string alternate
-        enum variant_type
-        string second_chromosome
-        int second_start
-        int second_end
-    }
+---
+config:
+    class:
+      hideEmptyMembersBox: true
+---
+classDiagram
+	direction TB
+	namespace StructuralInformation {
+		class Variant {
+			string chromosome
+			int start
+			int end
+			string reference
+			string alternate
+			enum variant_type
+			string second_chromosome
+			int second_start
+			int second_end
+		}
 
-	Coverage {
-		string chromosome
-		int position
-		int an
+		class Coverage {
+			string chromosome
+			int position
+			int an
+		}
 	}
 
-    Gnomad {
-        string chromosome
-        int position
-        string reference
-        string alternate
-        float gnomad_af
-        int gnomad_an
-        int gnomad_ac
-    }
+	namespace Annotation {
+		class Gnomad {
+			string chromosome
+			int position
+			string reference
+			string alternate
+			float gnomad_af
+			int gnomad_an
+			int gnomad_ac
+		}
 
-	ClinVar {
-        string chromosome
-        int position
-        string reference
-        string alternate
-		string clinical_signifiance
+		class ClinVar {
+			string chromosome
+			int position
+			string reference
+			string alternate
+			string clinical_signifiance
+		}
+
+		class VepSnpeff {
+			string chromosome
+			int position
+			string reference
+			string alternate
+			string impact
+			string effect
+		}
+
+		class AnnotSv {
+			string chromosome
+			int start
+			int end
+			string second_chromosome
+			int second_start
+			int second_end
+			string impact
+			string effect
+		}
 	}
 
-    VepSnpeff {
-        string chromosome
-        int position
-        string reference
-        string alternate
-        string impact
-        string effect
-    }
+	namespace SampleInformation {
+		class Genotyping {
+			string chromosome
+			int start
+			int end
+			string reference
+			string alternate
+			string sample_name
+			enum genotype
+			enum inheritance
+		}
 
-    AnnotSv {
-        string chromosome
-        int start
-        int end
-        string second_chromosome
-        int second_start
-        int second_end
-        string impact
-        string effect
-    }
+		class Symptom {
+			string sample_name
+			bool affected
+			string preindication
+			string hpos
+			string karyotypic_sex
+		}
+	}
 
-    Genotyping {
-        string chromosome
-        int start
-        int end
-        string reference
-        string alternate
-        string sample_name
-        enum genotype
-        enum inheritance
-    }
-
-    Sample {
-        string sample_name
-        bool affected
-		string preindication
-        string hpos
-		string karyotypic_sex
-    }
-
-    Variant ||--o{ Coverage: chromosome_start
-    Variant ||--o{ Gnomad: chromosome_start_reference_alternative
-    Variant ||--o{ VepSnpeff: chromosome_start_reference_alternative
-    Variant ||--o{ ClinVar: chromosome_start_reference_alternative
-	Variant ||--o{ AnnotSv: chromosome_start_reference_alternative
-    Variant ||--o{ Genotyping: chromosome_start_reference_alternative
-    Genotyping ||--o{ Sample: sample_name
+    Variant --> Coverage: chrom_start
+    Variant --> Gnomad: chrom_start_ref_alt
+    Variant --> VepSnpeff: chrom_start_ref_alt
+    Variant --> ClinVar: chrom_start_ref_alt
+    Variant --> AnnotSv: chrom_start_ref_alt
+    Variant --> Genotyping: chrom_start_ref_alt
+    Genotyping --> Symptom: sample_name
 ```
 
 [Details](doc/exploded_schema.md)
@@ -156,17 +169,42 @@ erDiagram
 | string | clinical_signifiance | Yes       | `ClinVar`    |
 | string | impact               | Yes       | `VepSnpeff`  |
 | string | effect               | Yes       | `VepSnpeff`  |
-| string | vepsnpeff_impact     | No        | `AnnotSv`    |
-| string | vepsnpeff_effect     | No        | `AnnotSv`    |
-| bool   | affected             | No        | `Sample`     |
-| string | preindication        | Yes       | `Sample`     |
-| string | hpos                 | Yes       | `Sample`     |
-| string | karyotypic_sex       | Yes       | `Sample`     |
+| string | annotsv_impact       | No        | `AnnotSv`    |
+| string | annotsv_effect       | No        | `AnnotSv`    |
+| bool   | affected             | No        | `Symptom`    |
+| string | preindication        | Yes       | `Symptom`    |
+| string | hpos                 | Yes       | `Symptom`    |
+| string | karyotypic_sex       | Yes       | `Symptom`    |
 | string | sample_name          | Yes       | `Genotyping` |
 | string | inheritance          | Yes       | `Genotyping` |
 
 [Details](doc/unified_schema.md)
 
-## vkb_convert
+## Subcommand
+### convert
 
-## vkb_exploded2unified
+This command are split in two subcommand, one to load data and another to save data.
+
+#### Load
+
+- gvcf: information `Variant`, `Coverage` and `Genotyping`
+- vcf: information `Variant`, any `Annotation` table
+- tsv: any type of information
+- phenopacket: information `Symptom`
+- json: any type of information
+
+#### Save
+
+- variant: save loaded information in `Variant`
+- coverage: save loaded information in `Coverage`
+- annotation: save loaded information in `Annotation` user need to indicate which table are targeted
+- symptom: save loaded information in `Symptom`
+- genotyping: save loaded information in `Genotyping`
+
+### exploded2unified
+
+This command take information from exploded database and aggregate it in unified database.
+
+User should select which table integrate a parameter indicate which column delete.
+Aggregation method are define by subcommand:
+- genotyping
