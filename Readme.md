@@ -160,23 +160,24 @@ classDiagram
 | int    | end                  | Yes       | `Variant`    |
 | string | reference            | Yes       | `Variant`    |
 | string | alternate            | Yes       | `Variant`    |
-| string | variant_type         | Yes       | `Variant`    |
+| enum   | variant_type         | Yes       | `Variant`    |
 | string | second_chromosome    | No        | `Variant`    |
 | int    | second_start         | No        | `Variant`    |
 | int    | second_end           | No        | `Variant`    |
 | int    | an                   | Yes       | `Coverage`   |
 | float  | gnomad_af            | No        | `Gnomad`     |
-| string | clinical_signifiance | Yes       | `ClinVar`    |
-| string | impact               | Yes       | `VepSnpeff`  |
-| string | effect               | Yes       | `VepSnpeff`  |
+| enum   | clinical_signifiance | Yes       | `ClinVar`    |
+| enum   | impact               | Yes       | `VepSnpeff`  |
+| enum   | effect               | Yes       | `VepSnpeff`  |
 | string | annotsv_impact       | No        | `AnnotSv`    |
 | string | annotsv_effect       | No        | `AnnotSv`    |
 | bool   | affected             | No        | `Symptom`    |
 | string | preindication        | Yes       | `Symptom`    |
 | string | hpos                 | Yes       | `Symptom`    |
 | string | karyotypic_sex       | Yes       | `Symptom`    |
-| string | sample_name          | Yes       | `Genotyping` |
-| string | inheritance          | Yes       | `Genotyping` |
+| string | sample_name          | No        | `Genotyping` |
+| enum   | genotype             | Yes       | `Genotyping` |
+| enum   | inheritance          | Yes       | `Genotyping` |
 
 [Details](doc/unified_schema.md)
 
