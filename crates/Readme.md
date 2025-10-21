@@ -30,4 +30,4 @@ Pierre Marijon, vkb: Variant Knowledge Base, JOSS, https://doi.org/XXXXXXX
 
 ## Minimum Supported Rust Version
 
-Currently the minimum supported Rust version is 1.81.
+Currently the minimum supported Rust version is 1.85.
