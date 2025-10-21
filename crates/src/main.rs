@@ -25,17 +25,27 @@ fn main() -> error::Result<()> {
         .init()
         .context("stderrlog already create a logger")?;
 
+    let runtime = tokio::runtime::Builder::new_multi_thread()
+        .enable_all()
+        .worker_threads(arguments.threads()?)
+        .thread_name("cadmos_worker")
+        .build()?;
+
     match arguments.subcommand() {
-        cli::SubCommand::Convert(subcmd) => convert(&arguments, subcmd),
-        cli::SubCommand::Exploded2unified(subcmd) => exploded2unified(&arguments, subcmd),
+        cli::SubCommand::Convert(subcmd) => {
+            runtime.block_on(async { convert(&arguments, subcmd).await })
+        }
+        cli::SubCommand::Exploded2unified(subcmd) => {
+            runtime.block_on(async { exploded2unified(&arguments, subcmd).await })
+        }
     }
 }
 
-fn convert(_arguments: &cli::Arguments, _subcmd: &cli::Convert) -> error::Result<()> {
+async fn convert(_arguments: &cli::Arguments, _subcmd: &cli::Convert) -> error::Result<()> {
     Ok(())
 }
 
-fn exploded2unified(
+async fn exploded2unified(
     _arguments: &cli::Arguments,
     _subcmd: &cli::Exploded2unified,
 ) -> error::Result<()> {

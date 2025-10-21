@@ -11,6 +11,9 @@
 pub enum Error {
     #[error(transparent)]
     Log(#[from] log::SetLoggerError),
+
+    #[error(transparent)]
+    StdIo(#[from] std::io::Error),
 }
 
 /// Alias of result

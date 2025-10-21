@@ -15,6 +15,7 @@ Commands:
 
 Options:
   -c, --catalog-path <CATALOG_PATH>  Catalog path
+  -t, --thread <THREADS>             Number of threads use if not set try to use maximum
   -q, --quiet                        Silence all output
   -v, --verbosity...                 Verbose mode (-v, -vv, -vvv, etc)
   -T, --timestamp <TS>               Timestamp (sec, ms, ns, none)

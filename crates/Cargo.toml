@@ -38,6 +38,22 @@ anyhow     = { version = "1" }
 log        = { version = "0.4" }
 stderrlog  = { version = "0.6" }
 
+## stdio management
+async-compression   = { version = "0.4", features = ["tokio", "gzip"] }
+
+## Iceberg management
+arrow-array         = { version = "56" }
+arrow-csv           = { version = "56" }
+arrow-schema        = { version = "56" }
+iceberg-rust        = { git = "https://github.com/JanKaul/iceberg-rust.git" }
+iceberg-sql-catalog = { git = "https://github.com/JanKaul/iceberg-rust.git" }
+sqlx                = { version = "0.8", features = ["runtime-tokio", "sqlite"] }
+
+## Multithreading management
+tokio               = { version = "1", features = ["rt-multi-thread"] }
+futures             = { version = "0.3" }
+
+
 
 [dev-dependencies]
 ## Functional test

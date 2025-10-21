@@ -5,6 +5,7 @@
 /* crate use */
 
 /* project use */
+use crate::error;
 
 #[derive(clap::Parser, std::fmt::Debug)]
 #[clap(
@@ -24,6 +25,10 @@ pub struct Arguments {
     subcommand: SubCommand,
 
     // Generic parameter
+    /// Number of threads use if not set try to use maximum
+    #[clap(short = 't', long = "thread")]
+    threads: Option<usize>,
+
     /// Silence all output
     #[clap(short = 'q', long = "quiet")]
     quiet: bool,
@@ -46,6 +51,13 @@ impl Arguments {
     /// Subcommand
     pub fn subcommand(&self) -> &SubCommand {
         &self.subcommand
+    }
+
+    /// Get number of threads
+    pub fn threads(&self) -> error::Result<usize> {
+        Ok(self
+            .threads
+            .unwrap_or(std::thread::available_parallelism()?.get()))
     }
 
     /// Get verbosity level
