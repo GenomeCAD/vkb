@@ -98,6 +98,10 @@ pub struct Convert {
     /// Tables where data are write
     #[clap(short = 'T', long = "tables")]
     tables: Vec<Table>,
+
+    /// Overwrite catalog
+    #[clap(short = 'o', long = "overwrite")]
+    overwrite: bool,
 }
 
 impl Convert {
@@ -111,6 +115,10 @@ impl Convert {
 
     pub fn tables(&self) -> &[Table] {
         &self.tables
+    }
+
+    pub fn overwrite(&self) -> bool {
+        self.overwrite
     }
 }
 

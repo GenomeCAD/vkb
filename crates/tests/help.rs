@@ -31,6 +31,7 @@ Options:
   -i, --input-path <INPUT_PATH>  Input path
   -t, --type <INPUT_TYPE>        Input type [possible values: gvcf, vcf, tsv, phenopacket, json]
   -T, --tables <TABLES>          Tables where data are write [possible values: variant, coverage, symptom, genotyping, gnomad, clinvar, vep, snpeff, annotsv]
+  -o, --overwrite                Overwrite catalog
   -h, --help                     Print help
 ";
 

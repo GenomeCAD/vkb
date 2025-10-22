@@ -10,7 +10,7 @@ use crate::iceberg;
 
 use crate::iceberg::catalog::Catalog as _;
 
-pub async fn reset<P>(catalog_path: P) -> error::Result<()>
+pub async fn create<P>(catalog_path: P) -> error::Result<()>
 where
     P: std::convert::AsRef<std::path::Path>,
 {
@@ -20,12 +20,6 @@ where
 
     let catalog =
         iceberg::catalog::SqliteFilesystem::from_path(catalog_path.as_ref(), "exploded").await?;
-
-    let namespace_id =
-        iceberg_rust::catalog::namespace::Namespace::try_new(&["exploded".to_string()])?;
-    for table_id in catalog.list_tabulars(&namespace_id).await? {
-        catalog.drop_table(&table_id).await?;
-    }
 
     let _variant_table = iceberg_rust::table::Table::builder()
         .with_name("variant")

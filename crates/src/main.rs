@@ -12,6 +12,9 @@ use clap::Parser as _;
 use vkb::cli;
 use vkb::db;
 use vkb::error;
+use vkb::iceberg;
+
+use vkb::iceberg::catalog::Catalog as _;
 
 fn main() -> error::Result<()> {
     // Parse argument
@@ -42,8 +45,14 @@ fn main() -> error::Result<()> {
     }
 }
 
-async fn convert(arguments: &cli::Arguments, _subcmd: &cli::Convert) -> error::Result<()> {
-    db::exploded::reset(arguments.catalog_path()).await?;
+async fn convert(arguments: &cli::Arguments, subcmd: &cli::Convert) -> error::Result<()> {
+    if subcmd.overwrite() || !arguments.catalog_path().exists() {
+        log::info!("Create catalog");
+        db::exploded::create(arguments.catalog_path()).await?;
+    }
+
+    let catalog =
+        iceberg::catalog::SqliteFilesystem::from_path(arguments.catalog_path(), "exploded").await?;
 
     Ok(())
 }
