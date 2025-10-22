@@ -14,10 +14,6 @@ pub async fn create<P>(catalog_path: P) -> error::Result<()>
 where
     P: std::convert::AsRef<std::path::Path>,
 {
-    if catalog_path.as_ref().exists() {
-        std::fs::remove_dir_all(catalog_path.as_ref())?;
-    }
-
     let catalog =
         iceberg::catalog::SqliteFilesystem::from_path(catalog_path.as_ref(), "exploded").await?;
 

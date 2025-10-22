@@ -313,6 +313,19 @@ pub(crate) fn columns()
         );
 
         map.insert(
+            "canonical",
+            iceberg_rust::spec::types::StructField::new(
+                ANNOTATION_FLAG | 9,
+                "canonical",
+                true,
+                iceberg_rust::spec::types::Type::Primitive(
+                    iceberg_rust::spec::types::PrimitiveType::Boolean,
+                ),
+                Some("transcript associate to impact and effect are canonical or not".to_string()),
+            ),
+        );
+
+        map.insert(
             "sample_name",
             iceberg_rust::spec::types::StructField::new(
                 SAMPLE_FLAG | 1,
@@ -590,7 +603,7 @@ pub(crate) fn group_partitions() -> &'static std::collections::HashMap<
             "genome",
             vec![
                 partitions()["chromosome"].clone(),
-                partitions()["position"].clone(),
+                partitions()["start"].clone(),
                 partitions()["variant_class"].clone(),
             ],
         );
@@ -598,7 +611,7 @@ pub(crate) fn group_partitions() -> &'static std::collections::HashMap<
         map.insert(
             "annotation",
             vec![
-                partitions()["clin_sig"].clone(),
+                partitions()["clinvar_clnsig"].clone(),
                 partitions()["impact"].clone(),
                 partitions()["effect"].clone(),
             ],
@@ -609,8 +622,8 @@ pub(crate) fn group_partitions() -> &'static std::collections::HashMap<
             vec![
                 partitions()["preindication"].clone(),
                 partitions()["karyotypic_sex"].clone(),
-                partitions()["inher"].clone(),
-                partitions()["gt"].clone(),
+                partitions()["inheritance"].clone(),
+                partitions()["genotype"].clone(),
             ],
         );
 

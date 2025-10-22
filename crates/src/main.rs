@@ -57,6 +57,18 @@ async fn convert(arguments: &cli::Arguments, subcmd: &cli::Convert) -> error::Re
     Ok(())
 }
 
-async fn aggregate(_arguments: &cli::Arguments, _subcmd: &cli::Aggregate) -> error::Result<()> {
+async fn aggregate(arguments: &cli::Arguments, subcmd: &cli::Aggregate) -> error::Result<()> {
+    if subcmd.output_path().exists() {
+        log::info!("Overwrite output catalog");
+        std::fs::remove_dir_all(subcmd.output_path())?;
+    }
+
+    db::unified::create(subcmd.output_path(), subcmd.tables(), subcmd.drop_columns()).await?;
+
+    let _exploded_catalog =
+        iceberg::catalog::SqliteFilesystem::from_path(arguments.catalog_path(), "exploded").await?;
+    let _unified_catalog =
+        iceberg::catalog::SqliteFilesystem::from_path(subcmd.output_path(), "unified").await?;
+
     Ok(())
 }

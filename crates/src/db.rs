@@ -6,6 +6,7 @@
 
 /* module declaration */
 pub mod exploded;
+pub mod unified;
 
 /* project use */
 

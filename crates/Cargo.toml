@@ -53,7 +53,8 @@ sqlx                = { version = "0.8", features = ["runtime-tokio", "sqlite"] 
 tokio               = { version = "1", features = ["rt-multi-thread"] }
 futures             = { version = "0.3" }
 
-
+## Other
+itertools           = { version = "0.14" }
 
 [dev-dependencies]
 ## Functional test
