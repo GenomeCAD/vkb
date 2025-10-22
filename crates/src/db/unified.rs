@@ -5,6 +5,7 @@
 /* crate use */
 
 /* project use */
+use crate::db;
 use crate::error;
 use crate::iceberg;
 
@@ -12,7 +13,7 @@ use crate::iceberg::catalog::Catalog as _;
 
 pub async fn create<P>(
     catalog_path: P,
-    _tables: &[crate::cli::Table],
+    _tables: &[db::Table],
     _drop_columns: &[String],
 ) -> error::Result<()>
 where

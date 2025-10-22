@@ -11,3 +11,17 @@ pub mod unified;
 /* project use */
 
 /* public reexport */
+
+#[derive(std::fmt::Debug, std::clone::Clone)]
+#[cfg_attr(feature = "bin", derive(clap::ValueEnum))]
+pub enum Table {
+    Variant,
+    Coverage,
+    Symptom,
+    Genotyping,
+    Gnomad,
+    Clinvar,
+    Vep,
+    Snpeff,
+    Annotsv,
+}

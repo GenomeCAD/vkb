@@ -5,6 +5,7 @@
 /* crate use */
 
 /* project use */
+use crate::db;
 use crate::error;
 
 #[derive(clap::Parser, std::fmt::Debug)]
@@ -97,7 +98,7 @@ pub struct Convert {
 
     /// Tables where data are write
     #[clap(short = 'T', long = "tables")]
-    tables: Vec<Table>,
+    tables: Vec<db::Table>,
 
     /// Overwrite catalog
     #[clap(short = 'o', long = "overwrite")]
@@ -113,7 +114,7 @@ impl Convert {
         &self.input_type
     }
 
-    pub fn tables(&self) -> &[Table] {
+    pub fn tables(&self) -> &[db::Table] {
         &self.tables
     }
 
@@ -126,7 +127,7 @@ impl Convert {
 pub struct Aggregate {
     /// Tables use to create unified table
     #[clap(short = 'T', long = "tables")]
-    tables: Vec<Table>,
+    tables: Vec<db::Table>,
 
     /// Name of columns to drop
     #[clap(short = 'd', long = "drop-columns")]
@@ -142,7 +143,7 @@ pub struct Aggregate {
 }
 
 impl Aggregate {
-    pub fn tables(&self) -> &[Table] {
+    pub fn tables(&self) -> &[db::Table] {
         &self.tables
     }
 
@@ -171,17 +172,4 @@ pub enum InputType {
     Tsv,
     Phenopacket,
     Json,
-}
-
-#[derive(clap::ValueEnum, std::fmt::Debug, std::clone::Clone)]
-pub enum Table {
-    Variant,
-    Coverage,
-    Symptom,
-    Genotyping,
-    Gnomad,
-    Clinvar,
-    Vep,
-    Snpeff,
-    Annotsv,
 }

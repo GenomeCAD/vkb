@@ -24,6 +24,7 @@ path = "src/lib.rs"
 [[bin]]
 name = "vkb"
 path = "src/main.rs"
+required-features = ["bin"]
 
 
 [dependencies]
@@ -67,14 +68,7 @@ criterion  = { version = "0.5" }
 
 [features]
 default = []
-bench = []
-
-
-[[bench]]
-name              = "rev_comp"
-required-features = ["bench"]
-harness           = false
-
+bin = []
 
 [profile.release]
 lto             = 'thin'
