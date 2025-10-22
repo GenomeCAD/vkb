@@ -74,7 +74,7 @@ classDiagram
 
 		class Coverage {
 			string chromosome
-			int position
+			int start
 			int an
 		}
 	}
@@ -82,7 +82,7 @@ classDiagram
 	namespace Annotation {
 		class Gnomad {
 			string chromosome
-			int position
+			int start
 			string reference
 			string alternate
 			float gnomad_af
@@ -92,10 +92,10 @@ classDiagram
 
 		class ClinVar {
 			string chromosome
-			int position
+			int start
 			string reference
 			string alternate
-			string clinical_signifiance
+			string clinvar_clnsig
 		}
 
 		class VepSnpeff {
@@ -114,8 +114,8 @@ classDiagram
 			string second_chromosome
 			int second_start
 			int second_end
-			string impact
-			string effect
+			string annotsv_impact
+			string annotsv_effect
 		}
 	}
 
@@ -126,6 +126,9 @@ classDiagram
 			int end
 			string reference
 			string alternate
+			string second_chromosome
+			int second_start
+			int second_end
 			string sample_name
 			enum genotype
 			enum inheritance
@@ -153,31 +156,35 @@ classDiagram
 
 ## Unified schema
 
-| type   | field                | mandatory | origin       |
-|--------|----------------------|-----------|--------------|
-| string | chromosome           | Yes       | `Variant`    |
-| int    | start                | Yes       | `Variant`    |
-| int    | end                  | Yes       | `Variant`    |
-| string | reference            | Yes       | `Variant`    |
-| string | alternate            | Yes       | `Variant`    |
-| enum   | variant_type         | Yes       | `Variant`    |
-| string | second_chromosome    | No        | `Variant`    |
-| int    | second_start         | No        | `Variant`    |
-| int    | second_end           | No        | `Variant`    |
-| int    | an                   | Yes       | `Coverage`   |
-| float  | gnomad_af            | No        | `Gnomad`     |
-| enum   | clinical_signifiance | Yes       | `ClinVar`    |
-| enum   | impact               | Yes       | `VepSnpeff`  |
-| enum   | effect               | Yes       | `VepSnpeff`  |
-| string | annotsv_impact       | No        | `AnnotSv`    |
-| string | annotsv_effect       | No        | `AnnotSv`    |
-| bool   | affected             | No        | `Symptom`    |
-| string | preindication        | Yes       | `Symptom`    |
-| string | hpos                 | Yes       | `Symptom`    |
-| string | karyotypic_sex       | Yes       | `Symptom`    |
-| string | sample_name          | No        | `Genotyping` |
-| enum   | genotype             | Yes       | `Genotyping` |
-| enum   | inheritance          | Yes       | `Genotyping` |
+| type   | field                | mandatory | origin                 |
+|--------|----------------------|-----------|------------------------|
+| string | chromosome           | Yes       | `Variant`              |
+| int    | start                | Yes       | `Variant`              |
+| int    | end                  | Yes       | `Variant`              |
+| string | reference            | Yes       | `Variant`              |
+| string | alternate            | Yes       | `Variant`              |
+| enum   | variant_type         | Yes       | `Variant`              |
+| string | second_chromosome    | No        | `Variant`              |
+| int    | second_start         | No        | `Variant`              |
+| int    | second_end           | No        | `Variant`              |
+| int    | an                   | Yes       | `Coverage`             |
+| float  | gnomad_af            | No        | `Gnomad`               |
+| int    | gnomad_an            | No        | `Gnomad`               |
+| int    | gnomad_ac            | No        | `Gnomad`               |
+| enum   | clinvar_clnsig       | Yes       | `ClinVar`              |
+| enum   | impact               | Yes       | `VepSnpeff`/`AnnotSv`  |
+| enum   | effect               | Yes       | `VepSnpeff`/`AnnotSv`  |
+| string | gene_symbol          | Yes       | `VepSnpeff`/`AnnotSv`  |
+| string | transcript_id        | Yes       | `VepSnpeff`/`AnnotSv`  |
+| bool   | affected             | No        | `Symptom`              |
+| string | preindication        | Yes       | `Symptom`              |
+| string | hpos                 | Yes       | `Symptom`              |
+| string | karyotypic_sex       | Yes       | `Symptom`              |
+| string | sample_name          | No        | `Genotyping`           |
+| enum   | genotype             | Yes       | `Genotyping`           |
+| enum   | inheritance          | Yes       | `Genotyping`           |
+| int    | ac                   | No        | Compute                |
+| float  | af                   | No        | Compute                |
 
 [Details](doc/unified_schema.md)
 

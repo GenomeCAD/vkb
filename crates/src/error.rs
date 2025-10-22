@@ -14,6 +14,15 @@ pub enum Error {
 
     #[error(transparent)]
     StdIo(#[from] std::io::Error),
+
+    #[error(transparent)]
+    Iceberg(#[from] iceberg_rust::error::Error),
+
+    #[error(transparent)]
+    IcebergSql(#[from] iceberg_sql_catalog::error::Error),
+
+    #[error(transparent)]
+    Sqlx(#[from] sqlx::error::Error),
 }
 
 /// Alias of result

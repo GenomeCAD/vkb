@@ -10,6 +10,7 @@ use clap::Parser as _;
 
 /* project use */
 use vkb::cli;
+use vkb::db;
 use vkb::error;
 
 fn main() -> error::Result<()> {
@@ -28,7 +29,7 @@ fn main() -> error::Result<()> {
     let runtime = tokio::runtime::Builder::new_multi_thread()
         .enable_all()
         .worker_threads(arguments.threads()?)
-        .thread_name("cadmos_worker")
+        .thread_name("vkb_worker")
         .build()?;
 
     match arguments.subcommand() {
@@ -41,7 +42,9 @@ fn main() -> error::Result<()> {
     }
 }
 
-async fn convert(_arguments: &cli::Arguments, _subcmd: &cli::Convert) -> error::Result<()> {
+async fn convert(arguments: &cli::Arguments, _subcmd: &cli::Convert) -> error::Result<()> {
+    db::exploded::reset(arguments.catalog_path()).await?;
+
     Ok(())
 }
 
