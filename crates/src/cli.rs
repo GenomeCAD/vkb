@@ -137,6 +137,10 @@ pub struct Aggregate {
     #[clap(short = 'm', long = "method")]
     method: Method,
 
+    /// Partition use
+    #[clap(short = 'p', long = "partitions")]
+    partitions: Vec<db::PartionGroup>,
+
     /// Output path
     #[clap(short = 'o', long = "output-path")]
     output_path: std::path::PathBuf,
@@ -153,6 +157,10 @@ impl Aggregate {
 
     pub fn method(&self) -> &Method {
         &self.method
+    }
+
+    pub fn partitions(&self) -> &[db::PartionGroup] {
+        &self.partitions
     }
 
     pub fn output_path(&self) -> &std::path::PathBuf {

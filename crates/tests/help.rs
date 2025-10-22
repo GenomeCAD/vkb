@@ -30,7 +30,7 @@ Usage: vkb --catalog-path <CATALOG_PATH> convert [OPTIONS] --input-path <INPUT_P
 Options:
   -i, --input-path <INPUT_PATH>  Input path
   -t, --type <INPUT_TYPE>        Input type [possible values: gvcf, vcf, tsv, phenopacket, json]
-  -T, --tables <TABLES>          Tables where data are write [possible values: variant, coverage, symptom, genotyping, gnomad, clinvar, vep, snpeff, annotsv]
+  -T, --tables <TABLES>          Tables where data are write [possible values: annotsv, clinvar, coverage, genotyping, gnomad, snpeff, symptom, variant, vep]
   -o, --overwrite                Overwrite catalog
   -h, --help                     Print help
 ";
@@ -40,9 +40,10 @@ const HELP_AGGREGATE: &[u8] = b"Generate a unified table from exploded database
 Usage: vkb --catalog-path <CATALOG_PATH> aggregate [OPTIONS] --method <METHOD> --output-path <OUTPUT_PATH>
 
 Options:
-  -T, --tables <TABLES>              Tables use to create unified table [possible values: variant, coverage, symptom, genotyping, gnomad, clinvar, vep, snpeff, annotsv]
+  -T, --tables <TABLES>              Tables use to create unified table [possible values: annotsv, clinvar, coverage, genotyping, gnomad, snpeff, symptom, variant, vep]
   -d, --drop-columns <DROP_COLUMNS>  Name of columns to drop
   -m, --method <METHOD>              Method of aggregation [possible values: genotype]
+  -p, --partitions <PARTITIONS>      Partition use [possible values: annotation, annotation-genome, annotation-genome-sample, annotation-sample, annotation-sample-genome, genome, genome-annotation, genome-annotation-sample, genome-sample, genome-sample-annotation, sample, sample-annotation, sample-annotation-genome, sample-genome]
   -o, --output-path <OUTPUT_PATH>    Output path
   -h, --help                         Print help
 ";

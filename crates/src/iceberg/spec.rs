@@ -5,7 +5,6 @@
 /* crate use */
 
 /* project use */
-use crate::error;
 
 /*
 Common columns:
@@ -630,88 +629,4 @@ pub(crate) fn group_partitions() -> &'static std::collections::HashMap<
 
         map
     })
-}
-
-pub fn variant_schema() -> error::Result<iceberg_rust::spec::schema::Schema> {
-    Ok(iceberg_rust::spec::schema::Schema::builder()
-        .with_struct_field(columns()["chromosome"].clone())
-        .with_struct_field(columns()["start"].clone())
-        .with_struct_field(columns()["end"].clone())
-        .with_struct_field(columns()["reference"].clone())
-        .with_struct_field(columns()["alternate"].clone())
-        .with_struct_field(columns()["variant_class"].clone())
-        .with_struct_field(columns()["second_chromosome"].clone())
-        .with_struct_field(columns()["second_start"].clone())
-        .with_struct_field(columns()["second_end"].clone())
-        .build()?)
-}
-
-pub fn coverage_schema() -> error::Result<iceberg_rust::spec::schema::Schema> {
-    Ok(iceberg_rust::spec::schema::Schema::builder()
-        .with_struct_field(columns()["chromosome"].clone())
-        .with_struct_field(columns()["start"].clone())
-        .with_struct_field(columns()["an"].clone())
-        .build()?)
-}
-
-pub fn gnomad_schema() -> error::Result<iceberg_rust::spec::schema::Schema> {
-    Ok(iceberg_rust::spec::schema::Schema::builder()
-        .with_struct_field(columns()["chromosome"].clone())
-        .with_struct_field(columns()["start"].clone())
-        .with_struct_field(columns()["reference"].clone())
-        .with_struct_field(columns()["alternate"].clone())
-        .with_struct_field(columns()["gnomad_af"].clone())
-        .with_struct_field(columns()["gnomad_an"].clone())
-        .with_struct_field(columns()["gnomad_ac"].clone())
-        .build()?)
-}
-
-pub fn vepsnpeff_schema() -> error::Result<iceberg_rust::spec::schema::Schema> {
-    Ok(iceberg_rust::spec::schema::Schema::builder()
-        .with_struct_field(columns()["chromosome"].clone())
-        .with_struct_field(columns()["start"].clone())
-        .with_struct_field(columns()["reference"].clone())
-        .with_struct_field(columns()["alternate"].clone())
-        .with_struct_field(columns()["impact"].clone())
-        .with_struct_field(columns()["effect"].clone())
-        .build()?)
-}
-
-pub fn annotsv_schema() -> error::Result<iceberg_rust::spec::schema::Schema> {
-    Ok(iceberg_rust::spec::schema::Schema::builder()
-        .with_struct_field(columns()["chromosome"].clone())
-        .with_struct_field(columns()["start"].clone())
-        .with_struct_field(columns()["end"].clone())
-        .with_struct_field(columns()["second_chromosome"].clone())
-        .with_struct_field(columns()["second_start"].clone())
-        .with_struct_field(columns()["second_end"].clone())
-        .with_struct_field(columns()["impact"].clone())
-        .with_struct_field(columns()["effect"].clone())
-        .build()?)
-}
-
-pub fn genotyping_schema() -> error::Result<iceberg_rust::spec::schema::Schema> {
-    Ok(iceberg_rust::spec::schema::Schema::builder()
-        .with_struct_field(columns()["chromosome"].clone())
-        .with_struct_field(columns()["start"].clone())
-        .with_struct_field(columns()["end"].clone())
-        .with_struct_field(columns()["reference"].clone())
-        .with_struct_field(columns()["alternate"].clone())
-        .with_struct_field(columns()["second_chromosome"].clone())
-        .with_struct_field(columns()["second_start"].clone())
-        .with_struct_field(columns()["second_end"].clone())
-        .with_struct_field(columns()["sample_name"].clone())
-        .with_struct_field(columns()["genotype"].clone())
-        .with_struct_field(columns()["inheritance"].clone())
-        .build()?)
-}
-
-pub fn symptom_schema() -> error::Result<iceberg_rust::spec::schema::Schema> {
-    Ok(iceberg_rust::spec::schema::Schema::builder()
-        .with_struct_field(columns()["sample_name"].clone())
-        .with_struct_field(columns()["affected"].clone())
-        .with_struct_field(columns()["preindication"].clone())
-        .with_struct_field(columns()["hpos"].clone())
-        .with_struct_field(columns()["karyotypic_sex"].clone())
-        .build()?)
 }

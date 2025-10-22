@@ -29,7 +29,7 @@ required-features = ["bin"]
 
 [dependencies]
 ## CLI management
-clap       = { version = "4", features = ["derive"] }
+clap       = { version = "4", features = ["derive"], optional = true }
 
 ## Error management
 thiserror  = { version = "1" }
@@ -56,6 +56,7 @@ futures             = { version = "0.3" }
 
 ## Other
 itertools           = { version = "0.14" }
+strum               = { version = "0.27", features = ["derive"] }
 
 [dev-dependencies]
 ## Functional test
@@ -68,7 +69,7 @@ criterion  = { version = "0.5" }
 
 [features]
 default = []
-bin = []
+bin = ["clap"]
 
 [profile.release]
 lto             = 'thin'
