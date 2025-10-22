@@ -17,7 +17,7 @@ flowchart LR
         json@{shape: docs, label: "json"}
 
         vkb_convert@{shape: st-rect, label: "convert"}
-        vkb_exploded2unified@{shape: rect, label: "exploded2unified"}
+        vkb_aggregate@{shape: rect, label: "aggregate"}
     end
 
     subgraph aggregate
@@ -37,9 +37,9 @@ flowchart LR
 
     vkb_convert --> Exploded
 
-    Exploded -->|select columns| vkb_exploded2unified
+    Exploded -->|select columns| vkb_aggregate
 
-    vkb_exploded2unified -->|periodically| Unified
+    vkb_aggregate -->|periodically| Unified
 
     Unified --> BeaconeV2
     BeaconeV2 --> Unified
@@ -209,7 +209,7 @@ This subcommand load data from a classic bioinformatic file and save information
 - symptom: save loaded information in `Symptom`
 - genotyping: save loaded information in `Genotyping`
 
-### exploded2unified
+### aggregate
 
 This subcommand take information from exploded database and aggregate it in unified database.
 

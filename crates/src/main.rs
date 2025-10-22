@@ -39,8 +39,8 @@ fn main() -> error::Result<()> {
         cli::SubCommand::Convert(subcmd) => {
             runtime.block_on(async { convert(&arguments, subcmd).await })
         }
-        cli::SubCommand::Exploded2unified(subcmd) => {
-            runtime.block_on(async { exploded2unified(&arguments, subcmd).await })
+        cli::SubCommand::Aggregate(subcmd) => {
+            runtime.block_on(async { aggregate(&arguments, subcmd).await })
         }
     }
 }
@@ -51,15 +51,12 @@ async fn convert(arguments: &cli::Arguments, subcmd: &cli::Convert) -> error::Re
         db::exploded::create(arguments.catalog_path()).await?;
     }
 
-    let catalog =
+    let _catalog =
         iceberg::catalog::SqliteFilesystem::from_path(arguments.catalog_path(), "exploded").await?;
 
     Ok(())
 }
 
-async fn exploded2unified(
-    _arguments: &cli::Arguments,
-    _subcmd: &cli::Exploded2unified,
-) -> error::Result<()> {
+async fn aggregate(_arguments: &cli::Arguments, _subcmd: &cli::Aggregate) -> error::Result<()> {
     Ok(())
 }

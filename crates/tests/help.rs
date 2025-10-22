@@ -9,9 +9,9 @@
 const HELP: &[u8] = b"Usage: vkb [OPTIONS] --catalog-path <CATALOG_PATH> <COMMAND>
 
 Commands:
-  convert           Insert classic bioinformatic information in exploded database
-  exploded2unified  Generate a unified table from exploded database
-  help              Print this message or the help of the given subcommand(s)
+  convert    Insert classic bioinformatic information in exploded database
+  aggregate  Generate a unified table from exploded database
+  help       Print this message or the help of the given subcommand(s)
 
 Options:
   -c, --catalog-path <CATALOG_PATH>  Catalog path
@@ -35,14 +35,14 @@ Options:
   -h, --help                     Print help
 ";
 
-const HELP_EXPLODED2UNIFIED: &[u8] = b"Generate a unified table from exploded database
+const HELP_AGGREGATE: &[u8] = b"Generate a unified table from exploded database
 
-Usage: vkb --catalog-path <CATALOG_PATH> exploded2unified [OPTIONS] --aggregation <AGGREGATION> --output-path <OUTPUT_PATH>
+Usage: vkb --catalog-path <CATALOG_PATH> aggregate [OPTIONS] --method <METHOD> --output-path <OUTPUT_PATH>
 
 Options:
   -T, --tables <TABLES>              Tables use to create unified table [possible values: variant, coverage, symptom, genotyping, gnomad, clinvar, vep, snpeff, annotsv]
   -d, --drop-columns <DROP_COLUMNS>  Name of columns to drop
-  -a, --aggregation <AGGREGATION>    Type of aggregation [possible values: genotype]
+  -m, --method <METHOD>              Method of aggregation [possible values: genotype]
   -o, --output-path <OUTPUT_PATH>    Output path
   -h, --help                         Print help
 ";
@@ -72,16 +72,13 @@ fn help_convert() -> vkb::error::Result<()> {
 }
 
 #[test]
-fn help_exploded2unified() -> vkb::error::Result<()> {
+fn help_aggregate() -> vkb::error::Result<()> {
     let mut cmd = assert_cmd::Command::cargo_bin("vkb")?;
-    cmd.args(["exploded2unified", "-h"]);
+    cmd.args(["aggregate", "-h"]);
 
     let assert = cmd.assert();
 
-    assert
-        .success()
-        .stderr(b"" as &[u8])
-        .stdout(HELP_EXPLODED2UNIFIED);
+    assert.success().stderr(b"" as &[u8]).stdout(HELP_AGGREGATE);
 
     Ok(())
 }

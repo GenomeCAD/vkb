@@ -82,7 +82,7 @@ pub enum SubCommand {
     Convert(Convert),
 
     /// Generate a unified table from exploded database
-    Exploded2unified(Exploded2unified),
+    Aggregate(Aggregate),
 }
 
 #[derive(clap::Parser, std::fmt::Debug, std::clone::Clone)]
@@ -123,7 +123,7 @@ impl Convert {
 }
 
 #[derive(clap::Parser, std::fmt::Debug, std::clone::Clone)]
-pub struct Exploded2unified {
+pub struct Aggregate {
     /// Tables use to create unified table
     #[clap(short = 'T', long = "tables")]
     tables: Vec<Table>,
@@ -132,16 +132,16 @@ pub struct Exploded2unified {
     #[clap(short = 'd', long = "drop-columns")]
     drop_columns: Vec<String>,
 
-    /// Type of aggregation
-    #[clap(short = 'a', long = "aggregation")]
-    aggregation: Aggregation,
+    /// Method of aggregation
+    #[clap(short = 'm', long = "method")]
+    method: Method,
 
     /// Output path
     #[clap(short = 'o', long = "output-path")]
     output_path: std::path::PathBuf,
 }
 
-impl Exploded2unified {
+impl Aggregate {
     pub fn tables(&self) -> &[Table] {
         &self.tables
     }
@@ -150,8 +150,8 @@ impl Exploded2unified {
         &self.drop_columns
     }
 
-    pub fn aggregation(&self) -> &Aggregation {
-        &self.aggregation
+    pub fn method(&self) -> &Method {
+        &self.method
     }
 
     pub fn output_path(&self) -> &std::path::PathBuf {
@@ -160,7 +160,7 @@ impl Exploded2unified {
 }
 
 #[derive(clap::ValueEnum, std::fmt::Debug, std::clone::Clone)]
-pub enum Aggregation {
+pub enum Method {
     Genotype,
 }
 
