@@ -98,7 +98,7 @@ classDiagram
 			string clinvar_clnsig
 		}
 
-		class Vep/Snpeff {
+		class Vep_Snpeff {
 			string chromosome
 			int position
 			string reference

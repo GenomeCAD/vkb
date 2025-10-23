@@ -63,7 +63,13 @@ async fn aggregate(arguments: &cli::Arguments, subcmd: &cli::Aggregate) -> error
         std::fs::remove_dir_all(subcmd.output_path())?;
     }
 
-    db::unified::create(subcmd.output_path(), subcmd.tables(), subcmd.drop_columns()).await?;
+    db::unified::create(
+        subcmd.output_path(),
+        subcmd.tables(),
+        subcmd.partitions(),
+        subcmd.drop_columns(),
+    )
+    .await?;
 
     let _exploded_catalog =
         iceberg::catalog::SqliteFilesystem::from_path(arguments.catalog_path(), "exploded").await?;

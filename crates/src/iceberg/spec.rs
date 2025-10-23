@@ -587,45 +587,7 @@ pub(crate) fn partitions()
     })
 }
 
-pub(crate) fn group_partitions() -> &'static std::collections::HashMap<
-    &'static str,
-    Vec<iceberg_rust::spec::partition::PartitionField>,
-> {
-    static GROUP_PARTITIONS_MAP: std::sync::OnceLock<
-        std::collections::HashMap<&str, Vec<iceberg_rust::spec::partition::PartitionField>>,
-    > = std::sync::OnceLock::new();
-
-    GROUP_PARTITIONS_MAP.get_or_init(|| {
-        let mut map = std::collections::HashMap::new();
-
-        map.insert(
-            "genome",
-            vec![
-                partitions()["chromosome"].clone(),
-                partitions()["start"].clone(),
-                partitions()["variant_class"].clone(),
-            ],
-        );
-
-        map.insert(
-            "annotation",
-            vec![
-                partitions()["clinvar_clnsig"].clone(),
-                partitions()["impact"].clone(),
-                partitions()["effect"].clone(),
-            ],
-        );
-
-        map.insert(
-            "sample",
-            vec![
-                partitions()["preindication"].clone(),
-                partitions()["karyotypic_sex"].clone(),
-                partitions()["inheritance"].clone(),
-                partitions()["genotype"].clone(),
-            ],
-        );
-
-        map
-    })
-}
+pub const GENOME_PARTITIONS: &[&str] = &["chromosome", "start", "variant_class"];
+pub const ANNOTATION_PARTITIONS: &[&str] = &["clinvar_clnsig", "impact", "effect"];
+pub const SAMPLE_PARTITIONS: &[&str] =
+    &["preindication", "karyotypic_sex", "inheritance", "genotype"];

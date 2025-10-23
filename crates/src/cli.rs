@@ -139,7 +139,7 @@ pub struct Aggregate {
 
     /// Partition use
     #[clap(short = 'p', long = "partitions")]
-    partitions: Vec<db::PartionGroup>,
+    partitions: Vec<db::PartitionGroup>,
 
     /// Output path
     #[clap(short = 'o', long = "output-path")]
@@ -159,7 +159,7 @@ impl Aggregate {
         &self.method
     }
 
-    pub fn partitions(&self) -> &[db::PartionGroup] {
+    pub fn partitions(&self) -> &[db::PartitionGroup] {
         &self.partitions
     }
 

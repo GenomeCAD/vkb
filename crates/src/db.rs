@@ -8,6 +8,8 @@
 pub mod exploded;
 pub mod unified;
 
+use std::fmt::Formatter;
+
 /* project use */
 use crate::error;
 use crate::iceberg;
@@ -29,7 +31,7 @@ pub enum Table {
 }
 
 impl Table {
-    pub fn list_columns(&self) -> &[&str] {
+    pub fn to_name_slice(&self) -> &[&str] {
         match self {
             &Table::Annotsv => &[
                 "chromosome",
@@ -107,37 +109,40 @@ impl Table {
     }
 
     pub fn to_schema(&self) -> error::Result<iceberg_rust::spec::schema::Schema> {
-        let mut builder = iceberg_rust::spec::schema::Schema::builder();
-        let mut builder_ref = &mut builder;
-
-        for column_name in self.list_columns() {
-            builder_ref =
-                builder_ref.with_struct_field(iceberg::spec::columns()[column_name].clone());
-        }
-
-        Ok(builder.build()?)
+        columns2schema(self.to_name_slice())
     }
 }
 
-impl std::string::ToString for Table {
-    fn to_string(&self) -> String {
+fn columns2schema(columns: &[&str]) -> error::Result<iceberg_rust::spec::schema::Schema> {
+    let mut builder = iceberg_rust::spec::schema::Schema::builder();
+    let mut builder_ref = &mut builder;
+
+    for column_name in columns {
+        builder_ref = builder_ref.with_struct_field(iceberg::spec::columns()[column_name].clone());
+    }
+
+    Ok(builder.build()?)
+}
+
+impl std::fmt::Display for Table {
+    fn fmt(&self, f: &mut Formatter) -> std::result::Result<(), std::fmt::Error> {
         match self {
-            Table::Annotsv => "annotsv".to_string(),
-            Table::Clinvar => "clinvar".to_string(),
-            Table::Coverage => "coverage".to_string(),
-            Table::Genotyping => "genotyping".to_string(),
-            Table::Gnomad => "gnomad".to_string(),
-            Table::Snpeff => "snpeff".to_string(),
-            Table::Symptom => "symptom".to_string(),
-            Table::Variant => "variant".to_string(),
-            Table::Vep => "vep".to_string(),
+            Table::Annotsv => write!(f, "annotsv"),
+            Table::Clinvar => write!(f, "clinvar"),
+            Table::Coverage => write!(f, "coverage"),
+            Table::Genotyping => write!(f, "genotyping"),
+            Table::Gnomad => write!(f, "gnomad"),
+            Table::Snpeff => write!(f, "snpeff"),
+            Table::Symptom => write!(f, "symptom"),
+            Table::Variant => write!(f, "variant"),
+            Table::Vep => write!(f, "vep"),
         }
     }
 }
 
 #[derive(std::fmt::Debug, std::clone::Clone)]
 #[cfg_attr(feature = "bin", derive(clap::ValueEnum))]
-pub enum PartionGroup {
+pub enum PartitionGroup {
     Annotation,
     AnnotationGenome,
     AnnotationGenomeSample,
@@ -152,4 +157,88 @@ pub enum PartionGroup {
     SampleAnnotation,
     SampleAnnotationGenome,
     SampleGenome,
+}
+
+impl PartitionGroup {
+    pub const fn to_name_slice(&self) -> &[&str] {
+        match self {
+            PartitionGroup::Annotation => iceberg::spec::ANNOTATION_PARTITIONS,
+            PartitionGroup::AnnotationGenome => constcat::concat_slices!([&str]:
+                                     iceberg::spec::ANNOTATION_PARTITIONS,
+                                     iceberg::spec::GENOME_PARTITIONS,
+            ),
+            PartitionGroup::AnnotationGenomeSample => constcat::concat_slices!([&str]:
+                                           iceberg::spec::ANNOTATION_PARTITIONS,
+                                           iceberg::spec::GENOME_PARTITIONS,
+                                           iceberg::spec::SAMPLE_PARTITIONS,
+            ),
+            PartitionGroup::AnnotationSample => constcat::concat_slices!([&str]:
+                                     iceberg::spec::ANNOTATION_PARTITIONS,
+                                     iceberg::spec::SAMPLE_PARTITIONS,
+            ),
+            PartitionGroup::AnnotationSampleGenome => constcat::concat_slices!([&str]:
+                                           iceberg::spec::ANNOTATION_PARTITIONS,
+                                           iceberg::spec::SAMPLE_PARTITIONS,
+                                     iceberg::spec::GENOME_PARTITIONS,
+            ),
+            PartitionGroup::Genome => iceberg::spec::GENOME_PARTITIONS,
+            PartitionGroup::GenomeAnnotation => constcat::concat_slices!([&str]:
+                                     iceberg::spec::GENOME_PARTITIONS,
+                                     iceberg::spec::ANNOTATION_PARTITIONS,
+            ),
+            PartitionGroup::GenomeAnnotationSample => constcat::concat_slices!([&str]:
+                                     iceberg::spec::GENOME_PARTITIONS,
+                                           iceberg::spec::ANNOTATION_PARTITIONS,
+                                           iceberg::spec::SAMPLE_PARTITIONS,
+            ),
+            PartitionGroup::GenomeSample => constcat::concat_slices!([&str]:
+                                     iceberg::spec::GENOME_PARTITIONS,
+                                     iceberg::spec::SAMPLE_PARTITIONS,
+            ),
+            PartitionGroup::GenomeSampleAnnotation => constcat::concat_slices!([&str]:
+                                           iceberg::spec::GENOME_PARTITIONS,
+                                           iceberg::spec::SAMPLE_PARTITIONS,
+                                     iceberg::spec::ANNOTATION_PARTITIONS,
+            ),
+            PartitionGroup::Sample => iceberg::spec::SAMPLE_PARTITIONS,
+
+            _ => todo!(),
+        }
+    }
+
+    pub fn to_partition_spec(&self) -> error::Result<iceberg_rust::spec::partition::PartitionSpec> {
+        partition_groups2partition_spec(self.to_name_slice())
+    }
+}
+
+impl std::fmt::Display for PartitionGroup {
+    fn fmt(&self, f: &mut Formatter) -> std::result::Result<(), std::fmt::Error> {
+        match self {
+            PartitionGroup::Annotation => write!(f, "annotation"),
+            PartitionGroup::AnnotationGenome => write!(f, "annotation_genome"),
+            PartitionGroup::AnnotationGenomeSample => write!(f, "annotation_genome_sample"),
+            PartitionGroup::AnnotationSample => write!(f, "annotation_sample"),
+            PartitionGroup::AnnotationSampleGenome => write!(f, "annotation_sample_genome"),
+            PartitionGroup::Genome => write!(f, "genome"),
+            PartitionGroup::GenomeAnnotation => write!(f, "genome_annotation"),
+            PartitionGroup::GenomeAnnotationSample => write!(f, "genome_annotation_sample"),
+            PartitionGroup::GenomeSample => write!(f, "genome_sample"),
+            PartitionGroup::GenomeSampleAnnotation => write!(f, "genome_sample_annotation"),
+            PartitionGroup::Sample => write!(f, "sample"),
+            PartitionGroup::SampleAnnotation => write!(f, "sample_annotation"),
+            PartitionGroup::SampleAnnotationGenome => write!(f, "sample_annotation_genome"),
+            PartitionGroup::SampleGenome => write!(f, "sample_genome"),
+        }
+    }
+}
+
+fn partition_groups2partition_spec(
+    partitions_names: &[&str],
+) -> error::Result<iceberg_rust::spec::partition::PartitionSpec> {
+    let mut part_builder = iceberg_rust::spec::partition::PartitionSpec::builder();
+    for partitition_name in partitions_names {
+        part_builder.with_partition_field(iceberg::spec::partitions()[partitition_name].clone());
+    }
+
+    Ok(part_builder.build()?)
 }

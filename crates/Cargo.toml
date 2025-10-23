@@ -57,6 +57,7 @@ futures             = { version = "0.3" }
 ## Other
 itertools           = { version = "0.14" }
 strum               = { version = "0.27", features = ["derive"] }
+constcat            = { version = "0.6" }
 
 [dev-dependencies]
 ## Functional test
