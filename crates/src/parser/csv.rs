@@ -76,6 +76,7 @@ where
             .unique()
             .map(|name| columns()[name].clone())
             .collect();
+        log::debug!("Columns {:?}", columns);
         let csv_schema = std::sync::Arc::new(arrow_schema::Schema::new(columns));
 
         let csv_decoder = arrow_csv::ReaderBuilder::new(csv_schema)
@@ -120,57 +121,47 @@ pub(crate) fn columns() -> &'static std::collections::HashMap<&'static str, arro
 
         map.insert(
             "chromosome",
-            arrow_schema::Field::new("chromosome", arrow_schema::DataType::Utf8, true),
-        );
-
-        map.insert(
-            "start",
-            arrow_schema::Field::new("start", arrow_schema::DataType::Int64, true),
-        );
-
-        map.insert(
-            "end",
-            arrow_schema::Field::new("end", arrow_schema::DataType::Int64, true),
-        );
-
-        map.insert(
-            "reference",
-            arrow_schema::Field::new("reference", arrow_schema::DataType::Utf8, true),
-        );
-
-        map.insert(
-            "alternate",
-            arrow_schema::Field::new("alternate", arrow_schema::DataType::Utf8, true),
-        );
-
-        map.insert(
-            "second_chromosome",
             arrow_schema::Field::new("chromosome", arrow_schema::DataType::Utf8, false),
         );
 
         map.insert(
-            "second_start",
+            "start",
             arrow_schema::Field::new("start", arrow_schema::DataType::Int64, false),
         );
 
         map.insert(
-            "second_end",
+            "end",
             arrow_schema::Field::new("end", arrow_schema::DataType::Int64, false),
         );
 
         map.insert(
-            "chromosome",
-            arrow_schema::Field::new("chromosome", arrow_schema::DataType::Utf8, true),
+            "reference",
+            arrow_schema::Field::new("reference", arrow_schema::DataType::Utf8, false),
         );
 
         map.insert(
-            "start",
-            arrow_schema::Field::new("start", arrow_schema::DataType::Int64, true),
+            "alternate",
+            arrow_schema::Field::new("alternate", arrow_schema::DataType::Utf8, false),
+        );
+
+        map.insert(
+            "second_chromosome",
+            arrow_schema::Field::new("second_chromosome", arrow_schema::DataType::Utf8, true),
+        );
+
+        map.insert(
+            "second_start",
+            arrow_schema::Field::new("second_start", arrow_schema::DataType::Int64, true),
+        );
+
+        map.insert(
+            "second_end",
+            arrow_schema::Field::new("second_end", arrow_schema::DataType::Int64, true),
         );
 
         map.insert(
             "variant_class",
-            arrow_schema::Field::new("variant_class", arrow_schema::DataType::Utf8, true),
+            arrow_schema::Field::new("variant_class", arrow_schema::DataType::Utf8, false),
         );
 
         map.insert(
@@ -180,87 +171,92 @@ pub(crate) fn columns() -> &'static std::collections::HashMap<&'static str, arro
 
         map.insert(
             "gnomad_af",
-            arrow_schema::Field::new("gnomad_af", arrow_schema::DataType::Float64, false),
+            arrow_schema::Field::new("gnomad_af", arrow_schema::DataType::Float64, true),
         );
 
         map.insert(
             "gnomad_an",
-            arrow_schema::Field::new("gnomad_an", arrow_schema::DataType::Int64, false),
+            arrow_schema::Field::new("gnomad_an", arrow_schema::DataType::Int64, true),
         );
 
         map.insert(
             "gnomad_ac",
-            arrow_schema::Field::new("gnomad_ac", arrow_schema::DataType::Int64, false),
+            arrow_schema::Field::new("gnomad_ac", arrow_schema::DataType::Int64, true),
         );
 
         map.insert(
             "clinvar_clnsig",
-            arrow_schema::Field::new("clinvar_clnsig", arrow_schema::DataType::Utf8, true),
+            arrow_schema::Field::new("clinvar_clnsig", arrow_schema::DataType::Utf8, false),
         );
 
         map.insert(
             "impact",
-            arrow_schema::Field::new("impact", arrow_schema::DataType::Utf8, true),
+            arrow_schema::Field::new("impact", arrow_schema::DataType::Utf8, false),
         );
 
         map.insert(
             "effect",
-            arrow_schema::Field::new("effect", arrow_schema::DataType::Utf8, true),
+            arrow_schema::Field::new("effect", arrow_schema::DataType::Utf8, false),
         );
 
         map.insert(
             "gene_symbol",
-            arrow_schema::Field::new("gene_symbol", arrow_schema::DataType::Utf8, true),
+            arrow_schema::Field::new("gene_symbol", arrow_schema::DataType::Utf8, false),
         );
 
         map.insert(
             "transcript_id",
-            arrow_schema::Field::new("transcript_id", arrow_schema::DataType::Utf8, true),
+            arrow_schema::Field::new("transcript_id", arrow_schema::DataType::Utf8, false),
         );
 
         map.insert(
             "canonical",
-            arrow_schema::Field::new("canonical", arrow_schema::DataType::Utf8, true),
+            arrow_schema::Field::new("canonical", arrow_schema::DataType::Utf8, false),
         );
 
         map.insert(
             "sample_name",
-            arrow_schema::Field::new("sample_name", arrow_schema::DataType::Utf8, false),
+            arrow_schema::Field::new("sample_name", arrow_schema::DataType::Utf8, true),
+        );
+
+        map.insert(
+            "genotype",
+            arrow_schema::Field::new("genotype", arrow_schema::DataType::Utf8, false),
         );
 
         map.insert(
             "inheritance",
-            arrow_schema::Field::new("inheritance", arrow_schema::DataType::Utf8, true),
+            arrow_schema::Field::new("inheritance", arrow_schema::DataType::Utf8, false),
         );
 
         map.insert(
             "ac",
-            arrow_schema::Field::new("ac", arrow_schema::DataType::Int64, false),
+            arrow_schema::Field::new("ac", arrow_schema::DataType::Int64, true),
         );
 
         map.insert(
             "af",
-            arrow_schema::Field::new("af", arrow_schema::DataType::Float64, false),
+            arrow_schema::Field::new("af", arrow_schema::DataType::Float64, true),
         );
 
         map.insert(
             "affected",
-            arrow_schema::Field::new("affected", arrow_schema::DataType::Boolean, false),
+            arrow_schema::Field::new("affected", arrow_schema::DataType::Boolean, true),
         );
 
         map.insert(
             "preindication",
-            arrow_schema::Field::new("preindication", arrow_schema::DataType::Utf8, true),
+            arrow_schema::Field::new("preindication", arrow_schema::DataType::Utf8, false),
         );
 
         map.insert(
             "hpos",
-            arrow_schema::Field::new("hpos", arrow_schema::DataType::Utf8, true),
+            arrow_schema::Field::new("hpos", arrow_schema::DataType::Utf8, false),
         );
 
         map.insert(
             "karyotypic_sex",
-            arrow_schema::Field::new("karyotypic_sex", arrow_schema::DataType::Utf8, true),
+            arrow_schema::Field::new("karyotypic_sex", arrow_schema::DataType::Utf8, false),
         );
 
         map
