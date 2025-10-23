@@ -121,20 +121,19 @@ impl Table {
 
 impl std::string::ToString for Table {
     fn to_string(&self) -> String {
-	match self {
-	Table::Annotsv => "annotsv".to_string(),
-        Table::Clinvar => "clinvar".to_string(),
-        Table::Coverage => "coverage".to_string(),
-        Table::Genotyping => "genotyping".to_string(),
-        Table::Gnomad => "gnomad".to_string(),
-        Table::Snpeff => "snpeff".to_string(),
-        Table::Symptom => "symptom".to_string(),
-        Table::Variant => "variant".to_string(),
-        Table::Vep => "vep".to_string(),
-	}
+        match self {
+            Table::Annotsv => "annotsv".to_string(),
+            Table::Clinvar => "clinvar".to_string(),
+            Table::Coverage => "coverage".to_string(),
+            Table::Genotyping => "genotyping".to_string(),
+            Table::Gnomad => "gnomad".to_string(),
+            Table::Snpeff => "snpeff".to_string(),
+            Table::Symptom => "symptom".to_string(),
+            Table::Variant => "variant".to_string(),
+            Table::Vep => "vep".to_string(),
+        }
     }
 }
-
 
 #[derive(std::fmt::Debug, std::clone::Clone)]
 #[cfg_attr(feature = "bin", derive(clap::ValueEnum))]
