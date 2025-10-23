@@ -6,6 +6,7 @@
 
 /* project use */
 
+#[cfg(feature = "bin")]
 const HELP: &[u8] = b"Usage: vkb [OPTIONS] --catalog-path <CATALOG_PATH> <COMMAND>
 
 Commands:
@@ -23,6 +24,7 @@ Options:
   -V, --version                      Print version
 ";
 
+#[cfg(feature = "bin")]
 const HELP_CONVERT: &[u8] = b"Insert classic bioinformatic information in exploded database
 
 Usage: vkb --catalog-path <CATALOG_PATH> convert [OPTIONS] --input-path <INPUT_PATH> --type <INPUT_TYPE>
@@ -35,6 +37,7 @@ Options:
   -h, --help                     Print help
 ";
 
+#[cfg(feature = "bin")]
 const HELP_AGGREGATE: &[u8] = b"Generate a unified table from exploded database
 
 Usage: vkb --catalog-path <CATALOG_PATH> aggregate [OPTIONS] --method <METHOD> --output-path <OUTPUT_PATH>
@@ -49,6 +52,7 @@ Options:
   -h, --help                         Print help
 ";
 
+#[cfg(feature = "bin")]
 #[test]
 fn help() -> vkb::error::Result<()> {
     let mut cmd = assert_cmd::Command::cargo_bin("vkb")?;
@@ -61,6 +65,7 @@ fn help() -> vkb::error::Result<()> {
     Ok(())
 }
 
+#[cfg(feature = "bin")]
 #[test]
 fn help_convert() -> vkb::error::Result<()> {
     let mut cmd = assert_cmd::Command::cargo_bin("vkb")?;
@@ -73,6 +78,7 @@ fn help_convert() -> vkb::error::Result<()> {
     Ok(())
 }
 
+#[cfg(feature = "bin")]
 #[test]
 fn help_aggregate() -> vkb::error::Result<()> {
     let mut cmd = assert_cmd::Command::cargo_bin("vkb")?;

@@ -65,6 +65,7 @@ derive_builder      = { version = "0.20" }
 ## Functional test
 assert_cmd = { version = "2" }
 tempfile   = { version = "3" }
+datafusion = { version = "50" }
 
 ## Benchmark management
 criterion  = { version = "0.5" }
