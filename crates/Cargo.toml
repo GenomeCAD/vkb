@@ -40,6 +40,7 @@ log        = { version = "0.4" }
 stderrlog  = { version = "0.6" }
 
 ## stdio management
+niffler             = { version = "3", default-features = false, features = [] }
 async-compression   = { version = "0.4", features = ["tokio", "gzip"] }
 
 ## Iceberg management
@@ -58,6 +59,7 @@ futures             = { version = "0.3" }
 itertools           = { version = "0.14" }
 strum               = { version = "0.27", features = ["derive"] }
 constcat            = { version = "0.6" }
+derive_builder      = { version = "0.20" }
 
 [dev-dependencies]
 ## Functional test
@@ -70,7 +72,7 @@ criterion  = { version = "0.5" }
 
 [features]
 default = []
-bin = ["clap"]
+bin = ["dep:clap"]
 
 [profile.release]
 lto             = 'thin'

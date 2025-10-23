@@ -40,10 +40,11 @@ const HELP_AGGREGATE: &[u8] = b"Generate a unified table from exploded database
 Usage: vkb --catalog-path <CATALOG_PATH> aggregate [OPTIONS] --method <METHOD> --output-path <OUTPUT_PATH>
 
 Options:
-  -T, --tables <TABLES>              Tables use to create unified table [possible values: annotsv, clinvar, coverage, genotyping, gnomad, snpeff, symptom, variant, vep]
+  -t, --tables <TABLES>              Tables use to create unified table [possible values: annotsv, clinvar, coverage, genotyping, gnomad, snpeff, symptom, variant, vep]
   -d, --drop-columns <DROP_COLUMNS>  Name of columns to drop
   -m, --method <METHOD>              Method of aggregation [possible values: genotype]
   -p, --partitions <PARTITIONS>      Partition use [possible values: annotation, annotation-genome, annotation-genome-sample, annotation-sample, annotation-sample-genome, genome, genome-annotation, genome-annotation-sample, genome-sample, genome-sample-annotation, sample, sample-annotation, sample-annotation-genome, sample-genome]
+  -i, --input-path <INPUT_PATH>      Input path, if set exploded catalog are ignored only information present in file are add
   -o, --output-path <OUTPUT_PATH>    Output path
   -h, --help                         Print help
 ";

@@ -22,7 +22,7 @@ const COMMON_FLAG: i32 = 2i32.pow(30);
 
 /*
 Variant columns:
-- variant_type
+- variant_class
 */
 const VARIANT_FLAG: i32 = 2i32.pow(29);
 
@@ -66,10 +66,10 @@ const SYMPTOM_FLAG: i32 = 2i32.pow(25);
 
 const PARTITION_FLAG: i32 = 2i32.pow(24);
 
-const LIST_FLAG: i32 = 2i32.pow(23);
+//const LIST_FLAG: i32 = 2i32.pow(23);
 
-pub(crate) fn columns()
--> &'static std::collections::HashMap<&'static str, iceberg_rust::spec::types::StructField> {
+pub(crate) fn columns(
+) -> &'static std::collections::HashMap<&'static str, iceberg_rust::spec::types::StructField> {
     static COLUMNS_MAP: std::sync::OnceLock<
         std::collections::HashMap<&str, iceberg_rust::spec::types::StructField>,
     > = std::sync::OnceLock::new();
@@ -421,13 +421,9 @@ pub(crate) fn columns()
                 SYMPTOM_FLAG | 3,
                 "hpos",
                 true,
-                iceberg_rust::spec::types::Type::List(iceberg_rust::spec::types::ListType {
-                    element_id: SYMPTOM_FLAG | LIST_FLAG | 1,
-                    element_required: true,
-                    element: std::boxed::Box::new(iceberg_rust::spec::types::Type::Primitive(
-                        iceberg_rust::spec::types::PrimitiveType::String,
-                    )),
-                }),
+                iceberg_rust::spec::types::Type::Primitive(
+                    iceberg_rust::spec::types::PrimitiveType::String,
+                ),
                 Some("Hpos of sample".to_string()),
             ),
         );
@@ -452,8 +448,9 @@ pub(crate) fn columns()
 const MAX_NUMBER_OF_POSITION_IN_PARTITION: u32 = 2u32.pow(20); // To increase number of partition reduce this
 const NUMBER_OF_SYMBOL_PARTITION: u32 = 2u32.pow(8); // To increase number of partition increase this
 
-pub(crate) fn partitions()
--> &'static std::collections::HashMap<&'static str, iceberg_rust::spec::partition::PartitionField> {
+pub(crate) fn partitions(
+) -> &'static std::collections::HashMap<&'static str, iceberg_rust::spec::partition::PartitionField>
+{
     static PARTITIONS_MAP: std::sync::OnceLock<
         std::collections::HashMap<&str, iceberg_rust::spec::partition::PartitionField>,
     > = std::sync::OnceLock::new();

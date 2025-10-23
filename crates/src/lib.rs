@@ -8,6 +8,7 @@
 pub mod db;
 pub mod error;
 pub mod iceberg;
+pub mod parser;
 
 #[cfg(feature = "bin")]
 pub mod cli;

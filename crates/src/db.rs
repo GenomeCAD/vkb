@@ -1,4 +1,4 @@
-//! Iceberg related tools
+//! Db related tools
 
 /* std use */
 
@@ -8,15 +8,13 @@
 pub mod exploded;
 pub mod unified;
 
-use std::fmt::Formatter;
-
 /* project use */
 use crate::error;
 use crate::iceberg;
 
 /* public reexport */
 
-#[derive(std::fmt::Debug, std::clone::Clone, strum::EnumIter)]
+#[derive(std::fmt::Debug, std::clone::Clone, std::marker::Copy, strum::EnumIter)]
 #[cfg_attr(feature = "bin", derive(clap::ValueEnum))]
 pub enum Table {
     Annotsv,
@@ -92,7 +90,7 @@ impl Table {
                 "end",
                 "reference",
                 "alternate",
-                "variant_type",
+                "variant_class",
                 "second_chromosome",
                 "second_start",
                 "second_end",
@@ -125,7 +123,7 @@ fn columns2schema(columns: &[&str]) -> error::Result<iceberg_rust::spec::schema:
 }
 
 impl std::fmt::Display for Table {
-    fn fmt(&self, f: &mut Formatter) -> std::result::Result<(), std::fmt::Error> {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::result::Result<(), std::fmt::Error> {
         match self {
             Table::Annotsv => write!(f, "annotsv"),
             Table::Clinvar => write!(f, "clinvar"),
@@ -140,7 +138,7 @@ impl std::fmt::Display for Table {
     }
 }
 
-#[derive(std::fmt::Debug, std::clone::Clone)]
+#[derive(std::fmt::Debug, std::clone::Clone, std::marker::Copy, strum::EnumIter)]
 #[cfg_attr(feature = "bin", derive(clap::ValueEnum))]
 pub enum PartitionGroup {
     Annotation,
@@ -212,7 +210,7 @@ impl PartitionGroup {
 }
 
 impl std::fmt::Display for PartitionGroup {
-    fn fmt(&self, f: &mut Formatter) -> std::result::Result<(), std::fmt::Error> {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::result::Result<(), std::fmt::Error> {
         match self {
             PartitionGroup::Annotation => write!(f, "annotation"),
             PartitionGroup::AnnotationGenome => write!(f, "annotation_genome"),

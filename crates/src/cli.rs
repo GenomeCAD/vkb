@@ -126,7 +126,7 @@ impl Convert {
 #[derive(clap::Parser, std::fmt::Debug, std::clone::Clone)]
 pub struct Aggregate {
     /// Tables use to create unified table
-    #[clap(short = 'T', long = "tables")]
+    #[clap(short = 't', long = "tables")]
     tables: Vec<db::Table>,
 
     /// Name of columns to drop
@@ -140,6 +140,10 @@ pub struct Aggregate {
     /// Partition use
     #[clap(short = 'p', long = "partitions")]
     partitions: Vec<db::PartitionGroup>,
+
+    /// Input path, if set exploded catalog are ignored only information present in file are add
+    #[clap(short = 'i', long = "input-path")]
+    input_path: Option<std::path::PathBuf>,
 
     /// Output path
     #[clap(short = 'o', long = "output-path")]
@@ -161,6 +165,10 @@ impl Aggregate {
 
     pub fn partitions(&self) -> &[db::PartitionGroup] {
         &self.partitions
+    }
+
+    pub fn input_path(&self) -> &Option<std::path::PathBuf> {
+        &self.input_path
     }
 
     pub fn output_path(&self) -> &std::path::PathBuf {

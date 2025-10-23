@@ -2117,6 +2117,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9252111cf132ba0929b6f8e030cac2a24b507f3a4d6db6fb2896f27b354c714b"
 
 [[package]]
+name = "niffler"
+version = "3.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "62d3115cc93dac9fabdfd25f7d4fda51ad4a959fb4667d39af20f70bddfb3574"
+dependencies = [
+ "cfg-if",
+ "thiserror 2.0.17",
+]
+
+[[package]]
 name = "num"
 version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3996,11 +4006,13 @@ dependencies = [
  "clap",
  "constcat",
  "criterion",
+ "derive_builder",
  "futures",
  "iceberg-rust",
  "iceberg-sql-catalog",
  "itertools 0.14.0",
  "log",
+ "niffler",
  "sqlx",
  "stderrlog",
  "strum",
