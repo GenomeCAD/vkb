@@ -15,14 +15,16 @@ flowchart LR
         tsv@{shape: docs, label: "tsv"}
         phenopacket@{shape: docs, label: "phenopacket"}
         json@{shape: docs, label: "json"}
-
-        vkb_convert@{shape: st-rect, label: "convert"}
         vkb_aggregate@{shape: rect, label: "aggregate"}
+        vkb_convert@{shape: st-rect, label: "convert"}
     end
 
     subgraph aggregate
         Unified@{shape: cyl, label: "Unified"}
     end
+
+    vkb_csv2unified@{shape: rect, label: "csv2unified"}
+    csv@{shape: doc, label: "already aggregate data"}
 
     subgraph public
         BeaconeV2[BeaconeV2]
@@ -40,6 +42,8 @@ flowchart LR
     Exploded -->|select columns| vkb_aggregate
 
     vkb_aggregate -->|periodically| Unified
+
+    csv --> vkb_csv2unified -->|One time| Unified
 
     Unified --> BeaconeV2
     BeaconeV2 --> Unified

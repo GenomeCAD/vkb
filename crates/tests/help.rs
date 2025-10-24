@@ -10,9 +10,10 @@
 const HELP: &[u8] = b"Usage: vkb [OPTIONS] --catalog-path <CATALOG_PATH> <COMMAND>
 
 Commands:
-  convert    Insert classic bioinformatic information in exploded database
-  aggregate  Generate a unified table from exploded database
-  help       Print this message or the help of the given subcommand(s)
+  convert      Insert classic bioinformatic information in exploded database
+  aggregate    Generate a unified table from exploded database
+  csv2unified  Use a csv to populate unified table
+  help         Print this message or the help of the given subcommand(s)
 
 Options:
   -c, --catalog-path <CATALOG_PATH>  Catalog path
@@ -47,9 +48,21 @@ Options:
   -d, --drop-columns <DROP_COLUMNS>  Name of columns to drop
   -m, --method <METHOD>              Method of aggregation [possible values: genotype]
   -p, --partitions <PARTITIONS>      Partition use [possible values: annotation, annotation-genome, annotation-genome-sample, annotation-sample, annotation-sample-genome, genome, genome-annotation, genome-annotation-sample, genome-sample, genome-sample-annotation, sample, sample-annotation, sample-annotation-genome, sample-genome]
-  -i, --input-path <INPUT_PATH>      Input path, if set exploded catalog are ignored only information present in file are add
   -o, --output-path <OUTPUT_PATH>    Output path
   -h, --help                         Print help
+";
+
+#[cfg(feature = "bin")]
+const HELP_CSV2UNIFIED: &[u8] = b"Use a csv to populate unified table
+
+Usage: vkb --catalog-path <CATALOG_PATH> csv2unified [OPTIONS] --input-path <INPUT_PATH> --output-path <OUTPUT_PATH>
+
+Options:
+  -i, --input-path <INPUT_PATH>    Input path, if set exploded catalog are ignored only information present in file are add
+  -t, --tables <TABLES>            Tables use to create unified table [possible values: annotsv, clinvar, coverage, genotyping, gnomad, snpeff, symptom, variant, vep]
+  -p, --partitions <PARTITIONS>    Partition use [possible values: annotation, annotation-genome, annotation-genome-sample, annotation-sample, annotation-sample-genome, genome, genome-annotation, genome-annotation-sample, genome-sample, genome-sample-annotation, sample, sample-annotation, sample-annotation-genome, sample-genome]
+  -o, --output-path <OUTPUT_PATH>  Output path
+  -h, --help                       Print help
 ";
 
 #[cfg(feature = "bin")]
@@ -87,6 +100,22 @@ fn help_aggregate() -> vkb::error::Result<()> {
     let assert = cmd.assert();
 
     assert.success().stderr(b"" as &[u8]).stdout(HELP_AGGREGATE);
+
+    Ok(())
+}
+
+#[cfg(feature = "bin")]
+#[test]
+fn help_csv2unified() -> vkb::error::Result<()> {
+    let mut cmd = assert_cmd::Command::cargo_bin("vkb")?;
+    cmd.args(["csv2unified", "-h"]);
+
+    let assert = cmd.assert();
+
+    assert
+        .success()
+        .stderr(b"" as &[u8])
+        .stdout(HELP_CSV2UNIFIED);
 
     Ok(())
 }

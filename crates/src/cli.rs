@@ -84,6 +84,9 @@ pub enum SubCommand {
 
     /// Generate a unified table from exploded database
     Aggregate(Aggregate),
+
+    /// Use a csv to populate unified table
+    Csv2unified(Csv2unified),
 }
 
 #[derive(clap::Parser, std::fmt::Debug, std::clone::Clone)]
@@ -141,10 +144,6 @@ pub struct Aggregate {
     #[clap(short = 'p', long = "partitions")]
     partitions: Vec<db::PartitionGroup>,
 
-    /// Input path, if set exploded catalog are ignored only information present in file are add
-    #[clap(short = 'i', long = "input-path")]
-    input_path: Option<std::path::PathBuf>,
-
     /// Output path
     #[clap(short = 'o', long = "output-path")]
     output_path: std::path::PathBuf,
@@ -167,12 +166,45 @@ impl Aggregate {
         &self.partitions
     }
 
-    pub fn input_path(&self) -> &Option<std::path::PathBuf> {
+    pub fn output_path(&self) -> &std::path::PathBuf {
+        &self.output_path
+    }
+}
+
+#[derive(clap::Parser, std::fmt::Debug, std::clone::Clone)]
+pub struct Csv2unified {
+    /// Input path, if set exploded catalog are ignored only information present in file are add
+    #[clap(short = 'i', long = "input-path")]
+    input_path: std::path::PathBuf,
+
+    /// Tables use to create unified table
+    #[clap(short = 't', long = "tables")]
+    tables: Vec<db::Table>,
+
+    /// Partition use
+    #[clap(short = 'p', long = "partitions")]
+    partitions: Vec<db::PartitionGroup>,
+
+    /// Output path
+    #[clap(short = 'o', long = "output-path")]
+    output_path: std::path::PathBuf,
+}
+
+impl Csv2unified {
+    pub fn input_path(&self) -> &std::path::PathBuf {
         &self.input_path
     }
 
     pub fn output_path(&self) -> &std::path::PathBuf {
         &self.output_path
+    }
+
+    pub fn tables(&self) -> &[db::Table] {
+        &self.tables
+    }
+
+    pub fn partitions(&self) -> &[db::PartitionGroup] {
+        &self.partitions
     }
 }
 

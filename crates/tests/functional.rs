@@ -18,11 +18,9 @@ fn load_variant_csv_unified() -> vkb::error::Result<()> {
     cmd.args([
         "-c",
         &format!("{}", exploded_path.display()),
-        "aggregate",
+        "csv2unified",
         "-t",
         "variant",
-        "-m",
-        "genotype",
         "-p",
         "genome",
         "-i",

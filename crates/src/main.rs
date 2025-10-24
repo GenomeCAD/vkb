@@ -43,6 +43,9 @@ fn main() -> error::Result<()> {
         cli::SubCommand::Aggregate(subcmd) => {
             runtime.block_on(async { aggregate(&arguments, subcmd).await })
         }
+        cli::SubCommand::Csv2unified(subcmd) => {
+            runtime.block_on(async { csv2unified(&arguments, subcmd).await })
+        }
     }
 }
 
@@ -77,62 +80,66 @@ async fn aggregate(arguments: &cli::Arguments, subcmd: &cli::Aggregate) -> error
 
     let _exploded_catalog =
         iceberg::catalog::SqliteFilesystem::from_path(arguments.catalog_path(), "exploded").await?;
+    let _unified_catalog =
+        iceberg::catalog::SqliteFilesystem::from_path(subcmd.output_path(), "unified").await?;
+
+    // Use exploded catalog to generate data to integrate in unified
+    log::error!("Aggregation of exploded db aren't yet support");
+
+    Ok(())
+}
+
+async fn csv2unified(_arguments: &cli::Arguments, subcmd: &cli::Csv2unified) -> error::Result<()> {
     let unified_catalog =
         iceberg::catalog::SqliteFilesystem::from_path(subcmd.output_path(), "unified").await?;
 
-    if let Some(input_path) = subcmd.input_path() {
-        log::info!(
-            "Start insertion of {} data in unified database.",
-            input_path.display()
-        );
-        // Read input csv and add data in unified
-        let namespace =
-            iceberg_rust::catalog::namespace::Namespace::try_new(&["unified".to_string()])?;
+    log::info!(
+        "Start insertion of {} data in unified database.",
+        subcmd.input_path().display()
+    );
+    // Read input csv and add data in unified
+    let namespace = iceberg_rust::catalog::namespace::Namespace::try_new(&["unified".to_string()])?;
 
-        let mut read_builder = parser::ArrowCsvReader::<std::path::PathBuf>::builder();
-        let mut read_builder_ref = read_builder
-            .input_path(input_path.clone())
-            .tables(subcmd.tables().to_vec());
+    let mut read_builder = parser::ArrowCsvReader::<std::path::PathBuf>::builder();
+    let mut read_builder_ref = read_builder
+        .input_path(subcmd.input_path().clone())
+        .tables(subcmd.tables().to_vec());
 
-        match std::fs::File::open(input_path)
-            .map(|r| Box::new(r) as Box<dyn std::io::Read>)
-            .map(niffler::sniff)??
-            .1
-        {
-            niffler::Format::No => read_builder_ref = read_builder_ref.gziped(false),
-            niffler::Format::Gzip => read_builder_ref = read_builder_ref.gziped(true),
-            compression => todo!("Compression format {:?} not support", compression),
-        }
-        let reader = read_builder_ref.build()?;
-
-        for table_id in unified_catalog.list_tabulars(&namespace).await?.iter() {
-            log::info!("Start insertion in table {}.", table_id);
-
-            let mut table = match unified_catalog.clone().load_tabular(table_id).await? {
-                iceberg_rust::catalog::tabular::Tabular::Table(t) => t,
-                _ => todo!("View or MaterializeView are not support"),
-            };
-
-            let data_files = iceberg_rust::arrow::write::write_parquet_partitioned(
-                &table,
-                reader.clone().to_stream().await?,
-                None,
-            )
-            .await?;
-
-            let transaction = table.new_transaction(None);
-            transaction.append_data(data_files).commit().await?;
-            log::info!("End insertion in table {}.", table_id);
-        }
-
-        log::info!(
-            "End insertion of {} data in unified database.",
-            input_path.display()
-        );
-    } else {
-        // Use exploded catalog to generate data to integrate in unified
-        todo!("Aggregation of exploded db aren't yet support")
+    match std::fs::File::open(subcmd.input_path())
+        .map(|r| Box::new(r) as Box<dyn std::io::Read>)
+        .map(niffler::sniff)??
+        .1
+    {
+        niffler::Format::No => read_builder_ref = read_builder_ref.gziped(false),
+        niffler::Format::Gzip => read_builder_ref = read_builder_ref.gziped(true),
+        compression => todo!("Compression format {:?} not support", compression),
     }
+    let reader = read_builder_ref.build()?;
+
+    for table_id in unified_catalog.list_tabulars(&namespace).await?.iter() {
+        log::info!("Start insertion in table {}.", table_id);
+
+        let mut table = match unified_catalog.clone().load_tabular(table_id).await? {
+            iceberg_rust::catalog::tabular::Tabular::Table(t) => t,
+            _ => todo!("View or MaterializeView are not support"),
+        };
+
+        let data_files = iceberg_rust::arrow::write::write_parquet_partitioned(
+            &table,
+            reader.clone().to_stream().await?,
+            None,
+        )
+        .await?;
+
+        let transaction = table.new_transaction(None);
+        transaction.append_data(data_files).commit().await?;
+        log::info!("End insertion in table {}.", table_id);
+    }
+
+    log::info!(
+        "End insertion of {} data in unified database.",
+        subcmd.input_path().display()
+    );
 
     Ok(())
 }

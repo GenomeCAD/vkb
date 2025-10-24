@@ -7,7 +7,7 @@ authors = [
 
 description  = "Variant Knowledge Base"
 edition      = "2024"
-rust-version = "1.85"
+rust-version = "1.87"
 
 homepage      = "https://GenomeCAD.github.io/vkb"
 repository    = "https://github.com/GenomeCAD/vkb"
