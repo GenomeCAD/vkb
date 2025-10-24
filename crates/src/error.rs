@@ -9,11 +9,15 @@
 /// Enum to define error
 #[derive(std::fmt::Debug, thiserror::Error)]
 pub enum Error {
+    #[cfg(feature = "rest_server")]
     #[error(transparent)]
-    Log(#[from] log::SetLoggerError),
+    IpAddrParse(#[from] core::net::AddrParseError),
 
     #[error(transparent)]
     StdIo(#[from] std::io::Error),
+
+    #[error(transparent)]
+    Log(#[from] log::SetLoggerError),
 
     #[error(transparent)]
     Iceberg(#[from] iceberg_rust::error::Error),
@@ -24,8 +28,9 @@ pub enum Error {
     #[error(transparent)]
     Sqlx(#[from] sqlx::error::Error),
 
+    #[cfg(feature = "request")]
     #[error(transparent)]
-    IpAddrParse(#[from] core::net::AddrParseError),
+    DataFusion(#[from] datafusion::error::DataFusionError),
 }
 
 /// Alias of result

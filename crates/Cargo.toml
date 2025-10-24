@@ -60,6 +60,7 @@ rocket              = { version = "0.5", features = ["json"], optional = true }
 
 ## Request database
 datafusion          = { version = "50", optional = true }
+datafusion_iceberg  = { git = "https://github.com/JanKaul/iceberg-rust.git", optional = true }
 
 ## Other
 itertools           = { version = "0.14" }
@@ -79,7 +80,7 @@ criterion  = { version = "0.5" }
 [features]
 default = ["bin"]
 bin = ["dep:clap"]
-request = ["dep:datafusion"]
+request = ["dep:datafusion", "dep:datafusion_iceberg"]
 rest_server = ["dep:rocket", "request"]
 
 [profile.release]

@@ -68,8 +68,8 @@ const PARTITION_FLAG: i32 = 2i32.pow(24);
 
 //const LIST_FLAG: i32 = 2i32.pow(23);
 
-pub(crate) fn columns(
-) -> &'static std::collections::HashMap<&'static str, iceberg_rust::spec::types::StructField> {
+pub(crate) fn columns()
+-> &'static std::collections::HashMap<&'static str, iceberg_rust::spec::types::StructField> {
     static COLUMNS_MAP: std::sync::OnceLock<
         std::collections::HashMap<&str, iceberg_rust::spec::types::StructField>,
     > = std::sync::OnceLock::new();
@@ -448,9 +448,8 @@ pub(crate) fn columns(
 const MAX_NUMBER_OF_POSITION_IN_PARTITION: u32 = 2u32.pow(20); // To increase number of partition reduce this
 const NUMBER_OF_SYMBOL_PARTITION: u32 = 2u32.pow(8); // To increase number of partition increase this
 
-pub(crate) fn partitions(
-) -> &'static std::collections::HashMap<&'static str, iceberg_rust::spec::partition::PartitionField>
-{
+pub(crate) fn partitions()
+-> &'static std::collections::HashMap<&'static str, iceberg_rust::spec::partition::PartitionField> {
     static PARTITIONS_MAP: std::sync::OnceLock<
         std::collections::HashMap<&str, iceberg_rust::spec::partition::PartitionField>,
     > = std::sync::OnceLock::new();

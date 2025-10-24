@@ -13,6 +13,9 @@ pub mod parser;
 #[cfg(feature = "bin")]
 pub mod cli;
 
+#[cfg(feature = "request")]
+pub mod request;
+
 /* project use */
 
 #[cfg(test)]
