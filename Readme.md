@@ -220,3 +220,7 @@ This subcommand take information from exploded database and aggregate it in unif
 User should select which table integrate a parameter indicate which column delete.
 Aggregation method are define by subcommand:
 - genotyping
+
+### csv2unified
+
+This subcommand take information from a file and build a unified table with this data.
