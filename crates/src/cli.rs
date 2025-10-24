@@ -5,7 +5,7 @@
 /* crate use */
 
 /* project use */
-use crate::db;
+use crate::catalog;
 use crate::error;
 
 #[derive(clap::Parser, std::fmt::Debug)]
@@ -100,7 +100,7 @@ pub struct Convert {
 
     /// Tables where data are write
     #[clap(short = 'T', long = "tables")]
-    tables: Vec<db::Table>,
+    tables: Vec<catalog::Table>,
 
     /// Overwrite catalog
     #[clap(short = 'o', long = "overwrite")]
@@ -120,7 +120,7 @@ impl Convert {
         &self.input_type
     }
 
-    pub fn tables(&self) -> &[db::Table] {
+    pub fn tables(&self) -> &[catalog::Table] {
         &self.tables
     }
 
@@ -141,7 +141,7 @@ pub struct Aggregate {
 
     /// Tables use to create unified table
     #[clap(short = 't', long = "tables")]
-    tables: Vec<db::Table>,
+    tables: Vec<catalog::Table>,
 
     /// Name of columns to drop
     #[clap(short = 'd', long = "drop-columns")]
@@ -153,7 +153,7 @@ pub struct Aggregate {
 
     /// Partition use
     #[clap(short = 'p', long = "partitions")]
-    partitions: Vec<db::PartitionGroup>,
+    partitions: Vec<catalog::PartitionGroup>,
 }
 
 impl Aggregate {
@@ -165,7 +165,7 @@ impl Aggregate {
         &self.unified_path
     }
 
-    pub fn tables(&self) -> &[db::Table] {
+    pub fn tables(&self) -> &[catalog::Table] {
         &self.tables
     }
 
@@ -177,7 +177,7 @@ impl Aggregate {
         &self.method
     }
 
-    pub fn partitions(&self) -> &[db::PartitionGroup] {
+    pub fn partitions(&self) -> &[catalog::PartitionGroup] {
         &self.partitions
     }
 }
@@ -194,11 +194,11 @@ pub struct Csv2unified {
 
     /// Tables use to create unified table
     #[clap(short = 't', long = "tables")]
-    tables: Vec<db::Table>,
+    tables: Vec<catalog::Table>,
 
     /// Partition use
     #[clap(short = 'p', long = "partitions")]
-    partitions: Vec<db::PartitionGroup>,
+    partitions: Vec<catalog::PartitionGroup>,
 }
 
 impl Csv2unified {
@@ -210,11 +210,11 @@ impl Csv2unified {
         &self.input_path
     }
 
-    pub fn tables(&self) -> &[db::Table] {
+    pub fn tables(&self) -> &[catalog::Table] {
         &self.tables
     }
 
-    pub fn partitions(&self) -> &[db::PartitionGroup] {
+    pub fn partitions(&self) -> &[catalog::PartitionGroup] {
         &self.partitions
     }
 }

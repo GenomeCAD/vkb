@@ -9,13 +9,13 @@ use anyhow::Context as _;
 use clap::Parser as _;
 
 /* project use */
+use vkb::catalog;
 use vkb::cli;
-use vkb::db;
 use vkb::error;
 use vkb::iceberg;
+use vkb::parser;
 
 use vkb::iceberg::catalog::Catalog as _;
-use vkb::parser;
 
 fn main() -> error::Result<()> {
     // Parse argument
@@ -50,7 +50,7 @@ fn main() -> error::Result<()> {
 async fn convert(subcmd: &cli::Convert) -> error::Result<()> {
     if subcmd.overwrite() || !subcmd.exploded_path().exists() {
         log::info!("Create catalog");
-        db::exploded::create(subcmd.exploded_path()).await?;
+        catalog::exploded::create(subcmd.exploded_path()).await?;
     }
 
     let _catalog =
@@ -67,7 +67,7 @@ async fn aggregate(subcmd: &cli::Aggregate) -> error::Result<()> {
     }
 
     log::info!("Start create unified database.");
-    db::unified::create(
+    catalog::unified::create(
         subcmd.unified_path(),
         subcmd.tables(),
         subcmd.partitions(),
@@ -82,7 +82,7 @@ async fn aggregate(subcmd: &cli::Aggregate) -> error::Result<()> {
         iceberg::catalog::SqliteFilesystem::from_path(subcmd.unified_path(), "unified").await?;
 
     // Use exploded catalog to generate data to integrate in unified
-    log::error!("Aggregation of exploded db aren't yet support");
+    log::error!("Aggregation of exploded catalog aren't yet support");
 
     Ok(())
 }

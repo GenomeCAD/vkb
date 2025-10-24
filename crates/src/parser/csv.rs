@@ -7,7 +7,7 @@
 use itertools::Itertools as _;
 
 /* project use */
-use crate::db;
+use crate::catalog;
 use crate::error;
 
 #[derive(std::clone::Clone, derive_builder::Builder)]
@@ -34,7 +34,7 @@ where
 
     /// Which table parser should match
     #[builder]
-    tables: Vec<db::Table>,
+    tables: Vec<catalog::Table>,
 }
 
 impl<P> ArrowCsvReader<P>
@@ -72,7 +72,7 @@ where
         let columns: Vec<_> = self
             .tables
             .iter()
-            .flat_map(db::Table::to_name_slice)
+            .flat_map(catalog::Table::to_name_slice)
             .unique()
             .map(|name| columns()[name].clone())
             .collect();

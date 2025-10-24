@@ -6,7 +6,7 @@
 use itertools::Itertools as _;
 
 /* project use */
-use crate::db;
+use crate::catalog;
 use crate::error;
 use crate::iceberg;
 
@@ -14,8 +14,8 @@ use crate::iceberg::catalog::Catalog as _;
 
 pub async fn create<P>(
     catalog_path: P,
-    tables: &[db::Table],
-    partitions: &[db::PartitionGroup],
+    tables: &[catalog::Table],
+    partitions: &[catalog::PartitionGroup],
     _drop_columns: &[String],
 ) -> error::Result<()>
 where
@@ -26,17 +26,17 @@ where
 
     let columns = tables
         .iter()
-        .flat_map(db::Table::to_name_slice)
+        .flat_map(catalog::Table::to_name_slice)
         .unique()
         .cloned()
         .collect::<Vec<&str>>();
 
-    let schema = db::columns2schema(&columns)?;
+    let schema = catalog::columns2schema(&columns)?;
 
     for part in partitions {
         let _table = iceberg_rust::table::Table::builder()
             .with_name(part.to_string())
-            .with_location(part.to_string())
+            .with_location(format!("{}/{}", "unified", part))
             .with_schema(schema.clone())
             .with_partition_spec(part.to_partition_spec()?)
             .build(&["unified".to_string()], catalog.clone())

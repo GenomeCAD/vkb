@@ -5,7 +5,7 @@
 /* crate use */
 
 /* module declaration */
-pub mod db;
+pub mod catalog;
 pub mod error;
 pub mod iceberg;
 pub mod parser;
