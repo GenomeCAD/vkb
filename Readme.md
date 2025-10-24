@@ -27,7 +27,7 @@ flowchart LR
     csv@{shape: doc, label: "already aggregate data"}
 
     subgraph public
-        BeaconeV2[BeaconeV2]
+        beacon@{shape: rect, label: "beacon server"}
         web@{shape: notch-rect, label: "web interface"}
     end
 
@@ -45,11 +45,11 @@ flowchart LR
 
     csv --> vkb_csv2unified -->|One time| Unified
 
-    Unified --> BeaconeV2
-    BeaconeV2 --> Unified
+    Unified --> beacon
+    beacon --> Unified
 
-    BeaconeV2 --> web
-    web --> BeaconeV2
+    beacon --> web
+    web --> beacon
 ```
 
 
@@ -224,3 +224,7 @@ Aggregation method are define by subcommand:
 ### csv2unified
 
 This subcommand take information from a file and build a unified table with this data.
+
+### beacon
+
+This subcommand start a http Beacon REST server.
