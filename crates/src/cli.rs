@@ -70,17 +70,17 @@ impl Arguments {
 
 #[derive(clap::Subcommand, std::fmt::Debug, std::clone::Clone)]
 pub enum SubCommand {
-    /// Insert classic bioinformatic information in exploded database
+    /// Insert classic bioinformatic information in exploded catalog
     Convert(Convert),
 
-    /// Generate a unified table from exploded database
+    /// Generate a unified table from exploded catalog
     Aggregate(Aggregate),
 
     /// Use a csv to populate unified table
     Csv2unified(Csv2unified),
 
     #[cfg(feature = "rest_server")]
-    /// Start a beacon REST server on unified
+    /// Start a beacon REST server on unified catalog
     Beacon(Beacon),
 }
 

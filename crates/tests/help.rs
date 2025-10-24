@@ -7,15 +7,31 @@
 /* project use */
 
 #[cfg(feature = "bin")]
-const HELP: &[u8] = b"Usage: vkb [OPTIONS] <COMMAND>
+const HELP_USAGE: &[u8] = b"Usage: vkb [OPTIONS] <COMMAND>
 
-Commands:
+";
+
+#[cfg(all(feature = "bin", not(feature = "rest_server")))]
+const HELP_COMMANDS: &[u8] = b"Commands:
   convert      Insert classic bioinformatic information in exploded database
   aggregate    Generate a unified table from exploded database
   csv2unified  Use a csv to populate unified table
   help         Print this message or the help of the given subcommand(s)
 
-Options:
+";
+
+#[cfg(all(feature = "bin", feature = "rest_server"))]
+const HELP_COMMANDS: &[u8] = b"Commands:
+  convert      Insert classic bioinformatic information in exploded catalog
+  aggregate    Generate a unified table from exploded catalog
+  csv2unified  Use a csv to populate unified table
+  beacon       Start a beacon REST server on unified catalog
+  help         Print this message or the help of the given subcommand(s)
+
+";
+
+#[cfg(feature = "bin")]
+const HELP_OPTION: &[u8] = b"Options:
   -t, --thread <THREADS>  Number of threads use if not set try to use maximum
   -q, --quiet             Silence all output
   -v, --verbosity...      Verbose mode (-v, -vv, -vvv, etc)
@@ -24,8 +40,10 @@ Options:
   -V, --version           Print version
 ";
 
+const HELP: &[u8] = constcat::concat_bytes!(HELP_USAGE, HELP_COMMANDS, HELP_OPTION);
+
 #[cfg(feature = "bin")]
-const HELP_CONVERT: &[u8] = b"Insert classic bioinformatic information in exploded database
+const HELP_CONVERT: &[u8] = b"Insert classic bioinformatic information in exploded catalog
 
 Usage: vkb convert [OPTIONS] --exploded-path <EXPLODED_PATH> --input-path <INPUT_PATH> --type <INPUT_TYPE>
 
@@ -39,7 +57,7 @@ Options:
 ";
 
 #[cfg(feature = "bin")]
-const HELP_AGGREGATE: &[u8] = b"Generate a unified table from exploded database
+const HELP_AGGREGATE: &[u8] = b"Generate a unified table from exploded catalog
 
 Usage: vkb aggregate [OPTIONS] --exploded-path <EXPLODED_PATH> --unified-path <UNIFIED_PATH> --method <METHOD>
 
@@ -67,14 +85,15 @@ Options:
 ";
 
 #[cfg(all(feature = "bin", feature = "rest_server"))]
-const HELP_BEACON: &[u8] = b"Start a beacon REST server on unified
+const HELP_BEACON: &[u8] = b"Start a beacon REST server on unified catalog
 
-Usage: vkb --catalog-path <CATALOG_PATH> beacon [OPTIONS]
+Usage: vkb beacon [OPTIONS] --unified-path <UNIFIED_PATH>
 
 Options:
-  -p, --port <PORT>        Set port of beacon server
-  -a, --address <ADDRESS>  Set ip adress
-  -h, --help               Print help
+  -u, --unified-path <UNIFIED_PATH>  Unified catalog path
+  -p, --port <PORT>                  Set port of beacon server
+  -a, --address <ADDRESS>            Set ip adress
+  -h, --help                         Print help
 ";
 
 #[cfg(feature = "bin")]

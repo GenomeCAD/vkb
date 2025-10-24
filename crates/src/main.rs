@@ -153,6 +153,6 @@ async fn beacon(subcmd: &cli::Beacon) -> error::Result<()> {
 
     log::info!("Start server with configuration {:?}", config);
 
-    let _rocket = rocket::custom(&config).mount("/").launch().await?;
+    let _rocket = rocket::custom(&config).launch().await?;
     Ok(())
 }
