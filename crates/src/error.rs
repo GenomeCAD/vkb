@@ -23,6 +23,9 @@ pub enum Error {
 
     #[error(transparent)]
     Sqlx(#[from] sqlx::error::Error),
+
+    #[error(transparent)]
+    IpAddrParse(#[from] core::net::AddrParseError),
 }
 
 /// Alias of result

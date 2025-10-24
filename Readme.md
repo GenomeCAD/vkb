@@ -192,7 +192,16 @@ classDiagram
 
 [Details](doc/unified_schema.md)
 
+## Features
+
+- `bin`: activate command line interface
+- `rest_server`: activate subcommand beacon to launch a server
+- `default`: `bin`
+
 ## Subcommand
+
+CLI are available only if features `bin` are set.
+
 ### convert
 
 This subcommand load data from a classic bioinformatic file and save information in exploded database.
@@ -227,4 +236,4 @@ This subcommand take information from a file and build a unified table with this
 
 ### beacon
 
-This subcommand start a http Beacon REST server.
+This subcommand start a http Beacon REST server, features `rest_server` are required.

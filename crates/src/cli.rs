@@ -87,6 +87,10 @@ pub enum SubCommand {
 
     /// Use a csv to populate unified table
     Csv2unified(Csv2unified),
+
+    #[cfg(feature = "rest_server")]
+    /// A beacon REST server
+    Beacon(Beacon),
 }
 
 #[derive(clap::Parser, std::fmt::Debug, std::clone::Clone)]
@@ -205,6 +209,29 @@ impl Csv2unified {
 
     pub fn partitions(&self) -> &[db::PartitionGroup] {
         &self.partitions
+    }
+}
+
+#[cfg(feature = "rest_server")]
+#[derive(clap::Parser, std::fmt::Debug, std::clone::Clone)]
+pub struct Beacon {
+    /// Set port of beacon server
+    #[clap(short = 'p', long = "port")]
+    port: Option<u16>,
+
+    /// Set ip adress
+    #[clap(short = 'a', long = "address")]
+    address: Option<core::net::IpAddr>,
+}
+
+#[cfg(feature = "rest_server")]
+impl Beacon {
+    pub fn port(&self) -> u16 {
+        self.port.unwrap_or(8080)
+    }
+
+    pub fn address(&self) -> error::Result<core::net::IpAddr> {
+        Ok(self.address.unwrap_or("127.0.0.1".parse()?))
     }
 }
 

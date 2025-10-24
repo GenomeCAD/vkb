@@ -46,6 +46,10 @@ fn main() -> error::Result<()> {
         cli::SubCommand::Csv2unified(subcmd) => {
             runtime.block_on(async { csv2unified(&arguments, subcmd).await })
         }
+        #[cfg(feature = "rest_server")]
+        cli::SubCommand::Beacon(subcmd) => {
+            runtime.block_on(async { beacon(&arguments, subcmd).await })
+        }
     }
 }
 
@@ -141,5 +145,20 @@ async fn csv2unified(_arguments: &cli::Arguments, subcmd: &cli::Csv2unified) -> 
         subcmd.input_path().display()
     );
 
+    Ok(())
+}
+
+#[cfg(feature = "rest_server")]
+async fn beacon(_arguments: &cli::Arguments, subcmd: &cli::Beacon) -> error::Result<()> {
+    let config = rocket::Config {
+        port: subcmd.port(),
+        address: subcmd.address()?,
+        log_level: rocket::config::LogLevel::Debug,
+        ..rocket::Config::debug_default()
+    };
+
+    log::info!("Start server with configuration {:?}", config);
+
+    let _rocket = rocket::custom(&config).launch().await?;
     Ok(())
 }
