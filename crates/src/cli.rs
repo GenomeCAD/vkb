@@ -17,10 +17,6 @@ use crate::error;
 )]
 pub struct Arguments {
     // Specific parameter
-    /// Catalog path
-    #[clap(short = 'c', long = "catalog-path")]
-    catalog_path: std::path::PathBuf,
-
     /// SubCommand command
     #[clap(subcommand)]
     subcommand: SubCommand,
@@ -44,11 +40,6 @@ pub struct Arguments {
 }
 
 impl Arguments {
-    /// Catalog path
-    pub fn catalog_path(&self) -> &std::path::PathBuf {
-        &self.catalog_path
-    }
-
     /// Subcommand
     pub fn subcommand(&self) -> &SubCommand {
         &self.subcommand
@@ -89,12 +80,16 @@ pub enum SubCommand {
     Csv2unified(Csv2unified),
 
     #[cfg(feature = "rest_server")]
-    /// A beacon REST server
+    /// Start a beacon REST server on unified
     Beacon(Beacon),
 }
 
 #[derive(clap::Parser, std::fmt::Debug, std::clone::Clone)]
 pub struct Convert {
+    /// Exploded catalog path
+    #[clap(short = 'e', long = "exploded-path")]
+    exploded_path: std::path::PathBuf,
+
     /// Input path
     #[clap(short = 'i', long = "input-path")]
     input_path: std::path::PathBuf,
@@ -113,6 +108,10 @@ pub struct Convert {
 }
 
 impl Convert {
+    pub fn exploded_path(&self) -> &std::path::PathBuf {
+        &self.exploded_path
+    }
+
     pub fn input_path(&self) -> &std::path::PathBuf {
         &self.input_path
     }
@@ -132,6 +131,14 @@ impl Convert {
 
 #[derive(clap::Parser, std::fmt::Debug, std::clone::Clone)]
 pub struct Aggregate {
+    /// Exploded catalog path
+    #[clap(short = 'e', long = "exploded-path")]
+    exploded_path: std::path::PathBuf,
+
+    /// Unified catalog path
+    #[clap(short = 'u', long = "unified-path")]
+    unified_path: std::path::PathBuf,
+
     /// Tables use to create unified table
     #[clap(short = 't', long = "tables")]
     tables: Vec<db::Table>,
@@ -147,13 +154,17 @@ pub struct Aggregate {
     /// Partition use
     #[clap(short = 'p', long = "partitions")]
     partitions: Vec<db::PartitionGroup>,
-
-    /// Output path
-    #[clap(short = 'o', long = "output-path")]
-    output_path: std::path::PathBuf,
 }
 
 impl Aggregate {
+    pub fn exploded_path(&self) -> &std::path::PathBuf {
+        &self.exploded_path
+    }
+
+    pub fn unified_path(&self) -> &std::path::PathBuf {
+        &self.unified_path
+    }
+
     pub fn tables(&self) -> &[db::Table] {
         &self.tables
     }
@@ -169,15 +180,15 @@ impl Aggregate {
     pub fn partitions(&self) -> &[db::PartitionGroup] {
         &self.partitions
     }
-
-    pub fn output_path(&self) -> &std::path::PathBuf {
-        &self.output_path
-    }
 }
 
 #[derive(clap::Parser, std::fmt::Debug, std::clone::Clone)]
 pub struct Csv2unified {
-    /// Input path, if set exploded catalog are ignored only information present in file are add
+    /// Unified catalog path
+    #[clap(short = 'u', long = "unified-path")]
+    unified_path: std::path::PathBuf,
+
+    /// Input data path
     #[clap(short = 'i', long = "input-path")]
     input_path: std::path::PathBuf,
 
@@ -188,19 +199,15 @@ pub struct Csv2unified {
     /// Partition use
     #[clap(short = 'p', long = "partitions")]
     partitions: Vec<db::PartitionGroup>,
-
-    /// Output path
-    #[clap(short = 'o', long = "output-path")]
-    output_path: std::path::PathBuf,
 }
 
 impl Csv2unified {
-    pub fn input_path(&self) -> &std::path::PathBuf {
-        &self.input_path
+    pub fn unified_path(&self) -> &std::path::PathBuf {
+        &self.unified_path
     }
 
-    pub fn output_path(&self) -> &std::path::PathBuf {
-        &self.output_path
+    pub fn input_path(&self) -> &std::path::PathBuf {
+        &self.input_path
     }
 
     pub fn tables(&self) -> &[db::Table] {
@@ -215,6 +222,10 @@ impl Csv2unified {
 #[cfg(feature = "rest_server")]
 #[derive(clap::Parser, std::fmt::Debug, std::clone::Clone)]
 pub struct Beacon {
+    /// Unified catalog path
+    #[clap(short = 'u', long = "unified-path")]
+    unified_path: std::path::PathBuf,
+
     /// Set port of beacon server
     #[clap(short = 'p', long = "port")]
     port: Option<u16>,
@@ -226,6 +237,10 @@ pub struct Beacon {
 
 #[cfg(feature = "rest_server")]
 impl Beacon {
+    pub fn unified_path(&self) -> &std::path::PathBuf {
+        &self.unified_path
+    }
+
     pub fn port(&self) -> u16 {
         self.port.unwrap_or(8080)
     }

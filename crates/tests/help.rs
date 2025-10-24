@@ -7,7 +7,7 @@
 /* project use */
 
 #[cfg(feature = "bin")]
-const HELP: &[u8] = b"Usage: vkb [OPTIONS] --catalog-path <CATALOG_PATH> <COMMAND>
+const HELP: &[u8] = b"Usage: vkb [OPTIONS] <COMMAND>
 
 Commands:
   convert      Insert classic bioinformatic information in exploded database
@@ -16,53 +16,65 @@ Commands:
   help         Print this message or the help of the given subcommand(s)
 
 Options:
-  -c, --catalog-path <CATALOG_PATH>  Catalog path
-  -t, --thread <THREADS>             Number of threads use if not set try to use maximum
-  -q, --quiet                        Silence all output
-  -v, --verbosity...                 Verbose mode (-v, -vv, -vvv, etc)
-  -T, --timestamp <TS>               Timestamp (sec, ms, ns, none)
-  -h, --help                         Print help
-  -V, --version                      Print version
+  -t, --thread <THREADS>  Number of threads use if not set try to use maximum
+  -q, --quiet             Silence all output
+  -v, --verbosity...      Verbose mode (-v, -vv, -vvv, etc)
+  -T, --timestamp <TS>    Timestamp (sec, ms, ns, none)
+  -h, --help              Print help
+  -V, --version           Print version
 ";
 
 #[cfg(feature = "bin")]
 const HELP_CONVERT: &[u8] = b"Insert classic bioinformatic information in exploded database
 
-Usage: vkb --catalog-path <CATALOG_PATH> convert [OPTIONS] --input-path <INPUT_PATH> --type <INPUT_TYPE>
+Usage: vkb convert [OPTIONS] --exploded-path <EXPLODED_PATH> --input-path <INPUT_PATH> --type <INPUT_TYPE>
 
 Options:
-  -i, --input-path <INPUT_PATH>  Input path
-  -t, --type <INPUT_TYPE>        Input type [possible values: gvcf, vcf, tsv, phenopacket, json]
-  -T, --tables <TABLES>          Tables where data are write [possible values: annotsv, clinvar, coverage, genotyping, gnomad, snpeff, symptom, variant, vep]
-  -o, --overwrite                Overwrite catalog
-  -h, --help                     Print help
+  -e, --exploded-path <EXPLODED_PATH>  Exploded catalog path
+  -i, --input-path <INPUT_PATH>        Input path
+  -t, --type <INPUT_TYPE>              Input type [possible values: gvcf, vcf, tsv, phenopacket, json]
+  -T, --tables <TABLES>                Tables where data are write [possible values: annotsv, clinvar, coverage, genotyping, gnomad, snpeff, symptom, variant, vep]
+  -o, --overwrite                      Overwrite catalog
+  -h, --help                           Print help
 ";
 
 #[cfg(feature = "bin")]
 const HELP_AGGREGATE: &[u8] = b"Generate a unified table from exploded database
 
-Usage: vkb --catalog-path <CATALOG_PATH> aggregate [OPTIONS] --method <METHOD> --output-path <OUTPUT_PATH>
+Usage: vkb aggregate [OPTIONS] --exploded-path <EXPLODED_PATH> --unified-path <UNIFIED_PATH> --method <METHOD>
 
 Options:
-  -t, --tables <TABLES>              Tables use to create unified table [possible values: annotsv, clinvar, coverage, genotyping, gnomad, snpeff, symptom, variant, vep]
-  -d, --drop-columns <DROP_COLUMNS>  Name of columns to drop
-  -m, --method <METHOD>              Method of aggregation [possible values: genotype]
-  -p, --partitions <PARTITIONS>      Partition use [possible values: annotation, annotation-genome, annotation-genome-sample, annotation-sample, annotation-sample-genome, genome, genome-annotation, genome-annotation-sample, genome-sample, genome-sample-annotation, sample, sample-annotation, sample-annotation-genome, sample-genome]
-  -o, --output-path <OUTPUT_PATH>    Output path
-  -h, --help                         Print help
+  -e, --exploded-path <EXPLODED_PATH>  Exploded catalog path
+  -u, --unified-path <UNIFIED_PATH>    Unified catalog path
+  -t, --tables <TABLES>                Tables use to create unified table [possible values: annotsv, clinvar, coverage, genotyping, gnomad, snpeff, symptom, variant, vep]
+  -d, --drop-columns <DROP_COLUMNS>    Name of columns to drop
+  -m, --method <METHOD>                Method of aggregation [possible values: genotype]
+  -p, --partitions <PARTITIONS>        Partition use [possible values: annotation, annotation-genome, annotation-genome-sample, annotation-sample, annotation-sample-genome, genome, genome-annotation, genome-annotation-sample, genome-sample, genome-sample-annotation, sample, sample-annotation, sample-annotation-genome, sample-genome]
+  -h, --help                           Print help
 ";
 
 #[cfg(feature = "bin")]
 const HELP_CSV2UNIFIED: &[u8] = b"Use a csv to populate unified table
 
-Usage: vkb --catalog-path <CATALOG_PATH> csv2unified [OPTIONS] --input-path <INPUT_PATH> --output-path <OUTPUT_PATH>
+Usage: vkb csv2unified [OPTIONS] --unified-path <UNIFIED_PATH> --input-path <INPUT_PATH>
 
 Options:
-  -i, --input-path <INPUT_PATH>    Input path, if set exploded catalog are ignored only information present in file are add
-  -t, --tables <TABLES>            Tables use to create unified table [possible values: annotsv, clinvar, coverage, genotyping, gnomad, snpeff, symptom, variant, vep]
-  -p, --partitions <PARTITIONS>    Partition use [possible values: annotation, annotation-genome, annotation-genome-sample, annotation-sample, annotation-sample-genome, genome, genome-annotation, genome-annotation-sample, genome-sample, genome-sample-annotation, sample, sample-annotation, sample-annotation-genome, sample-genome]
-  -o, --output-path <OUTPUT_PATH>  Output path
-  -h, --help                       Print help
+  -u, --unified-path <UNIFIED_PATH>  Unified catalog path
+  -i, --input-path <INPUT_PATH>      Input data path
+  -t, --tables <TABLES>              Tables use to create unified table [possible values: annotsv, clinvar, coverage, genotyping, gnomad, snpeff, symptom, variant, vep]
+  -p, --partitions <PARTITIONS>      Partition use [possible values: annotation, annotation-genome, annotation-genome-sample, annotation-sample, annotation-sample-genome, genome, genome-annotation, genome-annotation-sample, genome-sample, genome-sample-annotation, sample, sample-annotation, sample-annotation-genome, sample-genome]
+  -h, --help                         Print help
+";
+
+#[cfg(all(feature = "bin", feature = "rest_server"))]
+const HELP_BEACON: &[u8] = b"Start a beacon REST server on unified
+
+Usage: vkb --catalog-path <CATALOG_PATH> beacon [OPTIONS]
+
+Options:
+  -p, --port <PORT>        Set port of beacon server
+  -a, --address <ADDRESS>  Set ip adress
+  -h, --help               Print help
 ";
 
 #[cfg(feature = "bin")]
@@ -116,6 +128,19 @@ fn help_csv2unified() -> vkb::error::Result<()> {
         .success()
         .stderr(b"" as &[u8])
         .stdout(HELP_CSV2UNIFIED);
+
+    Ok(())
+}
+
+#[cfg(all(feature = "bin", feature = "rest_server"))]
+#[test]
+fn help_beacon() -> vkb::error::Result<()> {
+    let mut cmd = assert_cmd::Command::cargo_bin("vkb")?;
+    cmd.args(["beacon", "-h"]);
+
+    let assert = cmd.assert();
+
+    assert.success().stderr(b"" as &[u8]).stdout(HELP_BEACON);
 
     Ok(())
 }

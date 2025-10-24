@@ -11,13 +11,10 @@
 fn load_variant_csv_unified() -> vkb::error::Result<()> {
     let temp_dir = tempfile::tempdir()?;
     let temp_path = temp_dir.path();
-    let exploded_path = temp_path.join("exploded");
     let unified_path = temp_path.join("unified");
 
     let mut cmd = assert_cmd::Command::cargo_bin("vkb")?;
     cmd.args([
-        "-c",
-        &format!("{}", exploded_path.display()),
         "csv2unified",
         "-t",
         "variant",
@@ -25,7 +22,7 @@ fn load_variant_csv_unified() -> vkb::error::Result<()> {
         "genome",
         "-i",
         "tests/data/variant.csv",
-        "-o",
+        "-u",
         &format!("{}", unified_path.display()),
     ]);
 

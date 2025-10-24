@@ -195,7 +195,8 @@ classDiagram
 ## Features
 
 - `bin`: activate command line interface
-- `rest_server`: activate subcommand beacon to launch a server
+- `request`: activate request functionality
+- `rest_server`: activate subcommand beacon to launch a server (activate feature `request`)
 - `default`: `bin`
 
 ## Subcommand

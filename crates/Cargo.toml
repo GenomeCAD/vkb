@@ -58,6 +58,9 @@ futures             = { version = "0.3" }
 ## Web REST API
 rocket              = { version = "0.5", features = ["json"], optional = true }
 
+## Request database
+datafusion          = { version = "50", optional = true }
+
 ## Other
 itertools           = { version = "0.14" }
 strum               = { version = "0.27", features = ["derive"] }
@@ -68,7 +71,6 @@ derive_builder      = { version = "0.20" }
 ## Functional test
 assert_cmd = { version = "2" }
 tempfile   = { version = "3" }
-datafusion = { version = "50" }
 
 ## Benchmark management
 criterion  = { version = "0.5" }
@@ -77,7 +79,8 @@ criterion  = { version = "0.5" }
 [features]
 default = ["bin"]
 bin = ["dep:clap"]
-rest_server = ["dep:rocket"]
+request = ["dep:datafusion"]
+rest_server = ["dep:rocket", "request"]
 
 [profile.release]
 lto             = 'thin'

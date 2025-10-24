@@ -37,44 +37,38 @@ fn main() -> error::Result<()> {
         .build()?;
 
     match arguments.subcommand() {
-        cli::SubCommand::Convert(subcmd) => {
-            runtime.block_on(async { convert(&arguments, subcmd).await })
-        }
-        cli::SubCommand::Aggregate(subcmd) => {
-            runtime.block_on(async { aggregate(&arguments, subcmd).await })
-        }
+        cli::SubCommand::Convert(subcmd) => runtime.block_on(async { convert(subcmd).await }),
+        cli::SubCommand::Aggregate(subcmd) => runtime.block_on(async { aggregate(subcmd).await }),
         cli::SubCommand::Csv2unified(subcmd) => {
-            runtime.block_on(async { csv2unified(&arguments, subcmd).await })
+            runtime.block_on(async { csv2unified(subcmd).await })
         }
         #[cfg(feature = "rest_server")]
-        cli::SubCommand::Beacon(subcmd) => {
-            runtime.block_on(async { beacon(&arguments, subcmd).await })
-        }
+        cli::SubCommand::Beacon(subcmd) => runtime.block_on(async { beacon(subcmd).await }),
     }
 }
 
-async fn convert(arguments: &cli::Arguments, subcmd: &cli::Convert) -> error::Result<()> {
-    if subcmd.overwrite() || !arguments.catalog_path().exists() {
+async fn convert(subcmd: &cli::Convert) -> error::Result<()> {
+    if subcmd.overwrite() || !subcmd.exploded_path().exists() {
         log::info!("Create catalog");
-        db::exploded::create(arguments.catalog_path()).await?;
+        db::exploded::create(subcmd.exploded_path()).await?;
     }
 
     let _catalog =
-        iceberg::catalog::SqliteFilesystem::from_path(arguments.catalog_path(), "exploded").await?;
+        iceberg::catalog::SqliteFilesystem::from_path(subcmd.exploded_path(), "exploded").await?;
 
     Ok(())
 }
 
-async fn aggregate(arguments: &cli::Arguments, subcmd: &cli::Aggregate) -> error::Result<()> {
-    if subcmd.output_path().exists() {
+async fn aggregate(subcmd: &cli::Aggregate) -> error::Result<()> {
+    if subcmd.unified_path().exists() {
         log::info!("Start clean output path.");
-        std::fs::remove_dir_all(subcmd.output_path())?;
+        std::fs::remove_dir_all(subcmd.unified_path())?;
         log::info!("End clean output path.");
     }
 
     log::info!("Start create unified database.");
     db::unified::create(
-        subcmd.output_path(),
+        subcmd.unified_path(),
         subcmd.tables(),
         subcmd.partitions(),
         subcmd.drop_columns(),
@@ -83,9 +77,9 @@ async fn aggregate(arguments: &cli::Arguments, subcmd: &cli::Aggregate) -> error
     log::info!("End create unified database.");
 
     let _exploded_catalog =
-        iceberg::catalog::SqliteFilesystem::from_path(arguments.catalog_path(), "exploded").await?;
+        iceberg::catalog::SqliteFilesystem::from_path(subcmd.exploded_path(), "exploded").await?;
     let _unified_catalog =
-        iceberg::catalog::SqliteFilesystem::from_path(subcmd.output_path(), "unified").await?;
+        iceberg::catalog::SqliteFilesystem::from_path(subcmd.unified_path(), "unified").await?;
 
     // Use exploded catalog to generate data to integrate in unified
     log::error!("Aggregation of exploded db aren't yet support");
@@ -93,9 +87,9 @@ async fn aggregate(arguments: &cli::Arguments, subcmd: &cli::Aggregate) -> error
     Ok(())
 }
 
-async fn csv2unified(_arguments: &cli::Arguments, subcmd: &cli::Csv2unified) -> error::Result<()> {
+async fn csv2unified(subcmd: &cli::Csv2unified) -> error::Result<()> {
     let unified_catalog =
-        iceberg::catalog::SqliteFilesystem::from_path(subcmd.output_path(), "unified").await?;
+        iceberg::catalog::SqliteFilesystem::from_path(subcmd.unified_path(), "unified").await?;
 
     log::info!(
         "Start insertion of {} data in unified database.",
@@ -125,7 +119,7 @@ async fn csv2unified(_arguments: &cli::Arguments, subcmd: &cli::Csv2unified) -> 
 
         let mut table = match unified_catalog.clone().load_tabular(table_id).await? {
             iceberg_rust::catalog::tabular::Tabular::Table(t) => t,
-            _ => todo!("View or MaterializeView are not support"),
+            _ => anyhow::bail!("View or MaterializeView are not support"),
         };
 
         let data_files = iceberg_rust::arrow::write::write_parquet_partitioned(
@@ -149,7 +143,7 @@ async fn csv2unified(_arguments: &cli::Arguments, subcmd: &cli::Csv2unified) -> 
 }
 
 #[cfg(feature = "rest_server")]
-async fn beacon(_arguments: &cli::Arguments, subcmd: &cli::Beacon) -> error::Result<()> {
+async fn beacon(subcmd: &cli::Beacon) -> error::Result<()> {
     let config = rocket::Config {
         port: subcmd.port(),
         address: subcmd.address()?,
@@ -159,6 +153,6 @@ async fn beacon(_arguments: &cli::Arguments, subcmd: &cli::Beacon) -> error::Res
 
     log::info!("Start server with configuration {:?}", config);
 
-    let _rocket = rocket::custom(&config).launch().await?;
+    let _rocket = rocket::custom(&config).mount("/").launch().await?;
     Ok(())
 }
