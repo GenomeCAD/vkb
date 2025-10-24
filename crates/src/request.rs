@@ -36,13 +36,33 @@ pub async fn request_sessions(
     Ok(ctx)
 }
 
+fn get_info() -> rocket::serde::json::Value {
+    rocket::serde::json::json!({
+    "id": "fr.genomecad.vkb_beacon",
+    "name": "vkb_beacon",
+    "apiVersion": "v2.2.0",
+    "environment": "dev",
+    "organization": {
+        "id": "fr.genomecad",
+        "name": "Collecteur Analyseur de Données",
+    "welcomeUrl": "https://www.genomecad.fr/",
+    "contactUrl": "mailto:contact@genomecad.fr",
+    "logoUrl": "https://www.genomecad.fr/assets/Logo_CAD_seul_Fond_transparent.png"
+    }
+    })
+}
 #[rocket::get("/")]
+async fn root() -> rocket::serde::json::Value {
+    get_info()
+}
+
+#[rocket::get("/info")]
 async fn info() -> rocket::serde::json::Value {
-    rocket::serde::json::json!({ "status": "ok" })
+    get_info()
 }
 
 pub fn stage() -> rocket::fairing::AdHoc {
     rocket::fairing::AdHoc::on_ignite("vkb_beacon_request", |rocket| async {
-        rocket.mount("/", rocket::routes![info])
+        rocket.mount("/", rocket::routes![root, info])
     })
 }
