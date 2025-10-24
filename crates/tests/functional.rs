@@ -6,8 +6,6 @@
 
 /* project use */
 
-//--features bin -- -c ../catalog/exploded -vvv -T ns aggregate -t variant -m genotype -p genome -i tests/data/variant.csv -o ../catalog/unified
-
 #[cfg(feature = "bin")]
 #[test]
 fn load_variant_csv_unified() -> vkb::error::Result<()> {

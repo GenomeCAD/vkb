@@ -72,7 +72,7 @@ criterion  = { version = "0.5" }
 
 
 [features]
-default = []
+default = ["bin"]
 bin = ["dep:clap"]
 
 [profile.release]

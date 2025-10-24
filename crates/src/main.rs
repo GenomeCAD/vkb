@@ -101,14 +101,14 @@ async fn aggregate(arguments: &cli::Arguments, subcmd: &cli::Aggregate) -> error
         {
             niffler::Format::No => read_builder_ref = read_builder_ref.gziped(false),
             niffler::Format::Gzip => read_builder_ref = read_builder_ref.gziped(true),
-            compression @ _ => todo!("Compression format {:?} not support", compression),
+            compression => todo!("Compression format {:?} not support", compression),
         }
         let reader = read_builder_ref.build()?;
 
         for table_id in unified_catalog.list_tabulars(&namespace).await?.iter() {
             log::info!("Start insertion in table {}.", table_id);
 
-            let mut table = match unified_catalog.clone().load_tabular(&table_id).await? {
+            let mut table = match unified_catalog.clone().load_tabular(table_id).await? {
                 iceberg_rust::catalog::tabular::Tabular::Table(t) => t,
                 _ => todo!("View or MaterializeView are not support"),
             };
