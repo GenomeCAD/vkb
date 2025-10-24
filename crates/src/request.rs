@@ -35,3 +35,14 @@ pub async fn request_sessions(
 
     Ok(ctx)
 }
+
+#[rocket::get("/")]
+async fn info() -> rocket::serde::json::Value {
+    rocket::serde::json::json!({ "status": "ok" })
+}
+
+pub fn stage() -> rocket::fairing::AdHoc {
+    rocket::fairing::AdHoc::on_ignite("vkb_beacon_request", |rocket| async {
+        rocket.mount("/", rocket::routes![info])
+    })
+}

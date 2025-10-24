@@ -15,6 +15,9 @@ use vkb::error;
 use vkb::iceberg;
 use vkb::parser;
 
+#[cfg(feature = "rest_server")]
+use vkb::request;
+
 use vkb::iceberg::catalog::Catalog as _;
 
 fn main() -> error::Result<()> {
@@ -153,6 +156,9 @@ async fn beacon(subcmd: &cli::Beacon) -> error::Result<()> {
 
     log::info!("Start server with configuration {:?}", config);
 
-    let _rocket = rocket::custom(&config).launch().await?;
+    let _rocket = rocket::custom(&config)
+        .attach(request::stage())
+        .launch()
+        .await?;
     Ok(())
 }
